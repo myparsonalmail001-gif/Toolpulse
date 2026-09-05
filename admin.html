@@ -3,209 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolpulse Professional Enterprise Admin Panel</title>
-    <!-- Chart.js for Analytics Graph -->
+    <title>Tool Pulse - Master Admin Panel</title>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0f172a;
+            --bg-dark: #0f172a;
             --panel-bg: #1e293b;
             --card-bg: #334155;
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --accent: #06b6d4; /* Matching script.js Cyan Theme */
+            --text-light: #f8fafc;
+            --text-dim: #94a3b8;
             --danger: #ef4444;
-            --success: #22c55e;
-            --warning: #f59e0b;
+            --success: #10b981;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
+        body { background: var(--bg-dark); color: var(--text-light); display: flex; min-height: 100vh; }
 
-        /* Sidebar */
+        /* Sidebar Navigation */
         .sidebar { width: 260px; background: var(--panel-bg); padding: 20px; border-right: 1px solid #475569; display: flex; flex-direction: column; gap: 10px; }
         .sidebar h2 { font-size: 20px; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .nav-btn { background: transparent; color: var(--text-muted); border: none; padding: 12px; text-align: left; font-size: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; width: 100%; }
-        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+        .nav-btn { background: transparent; color: var(--text-dim); border: none; padding: 12px 15px; text-align: left; font-size: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; width: 100%; font-weight: 600; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* Main Content */
+        /* Main Area */
         .main-content { flex: 1; padding: 25px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #475569; padding-bottom: 15px; }
 
-        /* Dashboard Cards Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid #475569; }
-        .stat-card h4 { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
-        .stat-card .number { font-size: 28px; font-weight: bold; color: var(--accent); }
+        /* Stat Cards Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--panel-bg); padding: 18px; border-radius: 12px; border: 1px solid #475569; }
+        .stat-card h4 { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
+        .stat-card .number { font-size: 24px; font-weight: bold; color: var(--accent); }
 
-        /* Sections */
+        /* Tab Layouts */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid #475569; margin-bottom: 20px; }
-        .card h3 { margin-bottom: 15px; color: var(--accent); border-bottom: 1px solid #475569; padding-bottom: 8px; }
+        .card { background: var(--panel-bg); padding: 22px; border-radius: 12px; border: 1px solid #475569; margin-bottom: 20px; }
+        .card h3 { margin-bottom: 15px; color: var(--accent); border-bottom: 1px solid #475569; padding-bottom: 8px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
 
-        /* Controls & Inputs */
-        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-color); border: 1px solid #475569; color: #fff; border-radius: 6px; outline: none; }
-        textarea { height: 100px; resize: vertical; }
-        .btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        /* Forms & Inputs */
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px; color: var(--text-light); }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-dark); border: 1px solid #475569; color: #fff; border-radius: 6px; outline: none; font-size: 14px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
         .btn-primary { background: var(--accent); color: #000; }
 
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #475569; font-size: 14px; }
-        th { background: var(--card-bg); color: var(--accent); }
-
-        /* Toggle Switch (সঠিক CSS) */
+        /* Switch Styling */
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #64748b; transition: .4s; border-radius: 22px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(22px); }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+        .tool-card { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid #475569; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-    <!-- সাইডবার -->
+    <!-- Sidebar Controls -->
     <div class="sidebar">
-        <h2><i class="fa-solid fa-bolt"></i> Toolpulse</h2>
+        <h2><i class="fa-solid fa-bolt"></i> Tool Pulse</h2>
         <button class="nav-btn active" onclick="switchTab('dashboard', this)">
-            <i class="fa-solid fa-chart-pie"></i> Dashboard
+            <i class="fa-solid fa-chart-line"></i> Dashboard & Visitor
         </button>
         <button class="nav-btn" onclick="switchTab('tools', this)">
-            <i class="fa-solid fa-wrench"></i> Manage Tools
+            <i class="fa-solid fa-screwdriver-wrench"></i> Engine Tools Switch
         </button>
-        <button class="nav-btn" onclick="switchTab('analytics', this)">
-            <i class="fa-solid fa-chart-line"></i> Analytics
+        <button class="nav-btn" onclick="switchTab('ads', this)">
+            <i class="fa-solid fa-shield-halved"></i> Click Fraud Protection
+        </button>
+        <button class="nav-btn" onclick="switchTab('settings', this)">
+            <i class="fa-solid fa-sliders"></i> Global Settings
         </button>
     </div>
 
-    <!-- মূল কনটেন্ট -->
+    <!-- Main Workspace -->
     <div class="main-content">
         <div class="header">
-            <h2>Admin Enterprise Console</h2>
-            <span style="color: var(--success); font-size: 14px;"><i class="fa-solid fa-circle"></i> System Online</span>
+            <h2>Tool Pulse Admin Console</h2>
+            <button class="btn btn-danger" onclick="clearAdBlock()">
+                <i class="fa-solid fa-unlock"></i> Clear Ad Block State
+            </button>
         </div>
 
-        <!-- ১. ড্যাশবোর্ড ট্যাব -->
+        <!-- 1. Dashboard -->
         <div id="dashboard" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>Total Tools</h4>
-                    <div class="number">12</div>
+                    <h4>Total Visitors (script.js Data)</h4>
+                    <div class="number" id="statVisitors">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Active Users</h4>
-                    <div class="number">1,248</div>
+                    <h4>Active Engine Tools</h4>
+                    <div class="number" id="statActiveTools">8</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Server Load</h4>
-                    <div class="number" style="color: var(--success);">18%</div>
+                    <h4>Ad Protection Status</h4>
+                    <div class="number" id="statAdStatus" style="color: var(--success); font-size: 16px;">Active Protection</div>
                 </div>
             </div>
 
             <div class="card">
-                <h3><i class="fa-solid fa-wave-square"></i> Traffic Overview</h3>
-                <canvas id="trafficChart" style="max-height: 280px;"></canvas>
+                <h3><i class="fa-solid fa-chart-area"></i> Visitor Analytics</h3>
+                <canvas id="analyticsChart" style="max-height: 260px;"></canvas>
             </div>
         </div>
 
-        <!-- ২. টুলস ম্যানেজমেন্ট ট্যাব -->
+        <!-- 2. Tools Management -->
         <div id="tools" class="tab-content">
             <div class="card">
-                <h3>Add New Tool</h3>
-                <input type="text" placeholder="Tool Title (e.g. SEO Generator)">
-                <input type="text" placeholder="URL Route (e.g. /tools/seo)">
-                <textarea placeholder="Tool Description..."></textarea>
-                <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Tool</button>
-            </div>
-
-            <div class="card">
-                <h3>Active Tools List</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tool Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Image Resizer</td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </td>
-                            <td><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>PDF Converter</td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </td>
-                            <td><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h3><i class="fa-solid fa-wrench"></i> script.js Engine Tools Control</h3>
+                <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 15px;">
+                    আপনার `script.js` ফাইলের মূল ৮টি টুল অন/অফ করার কন্ট্রোল:
+                </p>
+                <div class="tools-grid" id="toolsGrid"></div>
             </div>
         </div>
 
-        <!-- ৩. অ্যানালিটিক্স ট্যাব -->
-        <div id="analytics" class="tab-content">
+        <!-- 3. Ad Spam Protection Controls -->
+        <div id="ads" class="tab-content">
             <div class="card">
-                <h3>System Performance Metrics</h3>
-                <p style="color: var(--text-muted);">Real-time server logs and database operation response times.</p>
+                <h3><i class="fa-solid fa-shield-cat"></i> Ad Click Spam Protection Settings</h3>
+                <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 15px;">
+                    `script.js`-এর প্রটেকশন অনুযায়ী ৬০ সেকেন্ডের মধ্যে ২বার ক্লিক করলে ৫ মিনিটের জন্য এড অটোমেটিক হাইড হয়ে যায়।
+                </p>
+                <form onsubmit="event.preventDefault(); alert('Settings Saved!');">
+                    <label>Click Limit Window (Seconds):</label>
+                    <input type="number" value="60" disabled>
+                    
+                    <label>Max Clicks Allowed:</label>
+                    <input type="number" value="2" disabled>
+
+                    <label>Auto Block Duration (Minutes):</label>
+                    <input type="number" value="5">
+
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Rules</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 4. Global Settings -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h3><i class="fa-solid fa-database"></i> Visitor Counter Management</h3>
+                <label>Set Total Visitor Count (Base Count):</label>
+                <input type="number" id="manualVisitorInput">
+                <button class="btn btn-success" onclick="updateVisitors()"><i class="fa-solid fa-rotate"></i> Update Visitors</button>
             </div>
         </div>
     </div>
 
-    <!-- জাভাস্ক্রিপ্ট কার্যকরী লজিক -->
     <script>
-        // ট্যাব পরিবর্তনের ফাংশন
+        // Mapping tools matching switchTool() in script.js
+        const scriptTools = [
+            { key: 'pdf-jpg', name: "PDF to JPG Converter", icon: "fa-file-pdf" },
+            { key: 'jpg-pdf', name: "JPG to PDF Converter", icon: "fa-file-image" },
+            { key: 'merge-pdf', name: "PDF Merger Tool", icon: "fa-code-merge" },
+            { key: 'resizer', name: "Image Resizer (300x300)", icon: "fa-crop-simple" },
+            { key: 'url-short', name: "URL Shortener", icon: "fa-link" },
+            { key: 'qr-gen', name: "QR Code Generator", icon: "fa-qrcode" },
+            { key: 'file-compare', name: "File Comparison Tool", icon: "fa-code-compare" },
+            { key: 'resize-kb', name: "Image Compressor (10-100KB)", icon: "fa-compress" }
+        ];
+
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(button => button.classList.remove('active'));
-            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
 
-        // Chart.js দিয়ে গ্রাফ রেন্ডার
-        const ctx = document.getElementById('trafficChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Daily Visitors',
-                    data: [320, 450, 600, 750, 900, 1100, 1248],
-                    borderColor: '#38bdf8',
-                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                    y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
-                },
-                plugins: {
-                    legend: { labels: { color: '#f8fafc' } }
-                }
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = '';
+            scriptTools.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = 'tool-card';
+                card.innerHTML = `
+                    <div>
+                        <i class="fa-solid ${tool.icon}" style="color: var(--accent); margin-right: 6px;"></i>
+                        <strong>${tool.name}</strong><br>
+                        <small style="color: var(--text-dim);">${tool.key}</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked onchange="alert('${tool.name} status toggled!')">
+                        <span class="slider"></span>
+                    </label>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Sync local storage from script.js
+        function syncLocalStorageData() {
+            const visitors = localStorage.getItem('totalVisitors') || 10000;
+            document.getElementById('statVisitors').innerText = visitors;
+            document.getElementById('manualVisitorInput').value = visitors;
+
+            const adBlockUntil = localStorage.getItem('adBlockUntil');
+            const now = new Date().getTime();
+            if (adBlockUntil && now < parseInt(adBlockUntil, 10)) {
+                const remainSec = Math.ceil((parseInt(adBlockUntil, 10) - now) / 1000);
+                document.getElementById('statAdStatus').innerText = `Blocked (${remainSec}s left)`;
+                document.getElementById('statAdStatus').style.color = "var(--danger)";
+            } else {
+                document.getElementById('statAdStatus').innerText = "Active Protection";
+                document.getElementById('statAdStatus').style.color = "var(--success)";
             }
-        });
+        }
+
+        function clearAdBlock() {
+            localStorage.removeItem('adBlockUntil');
+            alert('Ad protection block status cleared successfully!');
+            syncLocalStorageData();
+        }
+
+        function updateVisitors() {
+            const val = document.getElementById('manualVisitorInput').value;
+            localStorage.setItem('totalVisitors', val);
+            syncLocalStorageData();
+            alert('Visitor base count updated!');
+        }
+
+        window.onload = function() {
+            renderTools();
+            syncLocalStorageData();
+
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Script Tool Usage',
+                        data: [250, 400, 550, 700, 850, 1100, 1350],
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    },
+                    plugins: { legend: { labels: { color: '#f8fafc' } } }
+                }
+            });
+        };
     </script>
 </body>
 </html>
