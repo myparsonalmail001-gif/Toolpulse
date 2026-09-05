@@ -3,117 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Pulse - Admin Control Panel</title>
-    <!-- Tailwind CSS & FontAwesome Icons -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Admin Panel - Toolpulse</title>
     <style>
-        .bg-theme-gradient { 
-            background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%); 
-        }
+        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .hidden { display: none; }
+        .error-message { color: #dc3545; font-size: 14px; margin-bottom: 10px; display: none; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col">
+<body>
 
-    <!-- Admin Header Navigation -->
-    <header class="bg-theme-gradient text-white shadow-lg p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                <i class="fa-solid fa-user-shield"></i> Tool Pulse - Admin Dashboard
-            </h1>
-            <a href="instant.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-                <i class="fa-solid fa-globe"></i> Main Website
-            </a>
-        </div>
-    </header>
+<!-- Login Form -->
+<div class="container" id="login-box">
+    <h2>Admin Login</h2>
+    <form id="login-form">
+        <div id="error-msg" class="error-message"></div>
+        <input type="email" id="email" placeholder="Email" required autocomplete="username">
+        <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" id="btn-login">Login</button>
+    </form>
+</div>
 
-    <!-- Main Dashboard Container -->
-    <main class="container mx-auto p-4 md:p-6 flex-grow max-w-5xl">
-        
-        <!-- Analytics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            
-            <!-- Total Visitors Card (Default 10,000+) -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-cyan-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Active Visitors</p>
-                    <h2 id="adminTotalVisitors" class="text-3xl font-extrabold text-cyan-700 mt-1">10,000</h2>
-                </div>
-                <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-xl flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-            </div>
+<!-- Admin Content -->
+<div class="container hidden" id="admin-content">
+    <h2>Welcome to Admin Panel</h2>
+    <p>আপনি সফলভাবে এডমিন প্যানেলে প্রবেশ করেছেন!</p>
+    <button id="btn-logout" style="background: #dc3545;">Logout</button>
+</div>
 
-            <!-- Ad Blocked Users (Spam Protection Tracking) -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-emerald-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ad Spam Protected</p>
-                    <h2 id="adminBlockedClicks" class="text-3xl font-extrabold text-emerald-700 mt-1">Active</h2>
-                </div>
-                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-            </div>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-            <!-- Active Utility Tools -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-indigo-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Tools</p>
-                    <h2 class="text-3xl font-extrabold text-indigo-700 mt-1">8 Tools</h2>
-                </div>
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-toolbox"></i>
-                </div>
-            </div>
-        </div>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAv0hl6l5bFHGK_aN2Ap_7iPGnnQftNPN8",
+    authDomain: "toolpulse-admin.firebaseapp.com",
+    projectId: "toolpulse-admin",
+    storageBucket: "toolpulse-admin.firebasestorage.app",
+    messagingSenderId: "420891454976",
+    appId: "1:420891454976:web:367097596e4ee7ec3572e5",
+    measurementId: "G-0WEYMXY55F"
+  };
 
-        <!-- Visitor Control Panel -->
-        <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
-            <h3 class="text-lg font-bold text-slate-700 border-b pb-3 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-cyan-600"></i> Visitor Counter Management
-            </h3>
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-            <div class="space-y-4 max-w-md">
-                <div>
-                    <label for="baseVisitorInput" class="block text-sm font-medium text-slate-600 mb-1">Set Base Visitor Starting Number</label>
-                    <input type="number" id="baseVisitorInput" value="10000" min="0" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
-                </div>
-                <button type="button" onclick="updateBaseCounter()" class="bg-theme-gradient hover:opacity-95 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
-                    Update Base Counter
-                </button>
-            </div>
-        </div>
-    </main>
+  const loginBox = document.getElementById('login-box');
+  const adminContent = document.getElementById('admin-content');
+  const loginForm = document.getElementById('login-form');
+  const logoutBtn = document.getElementById('btn-logout');
+  const errorMsg = document.getElementById('error-msg');
 
-    <footer class="bg-slate-800 text-slate-400 text-center py-4 text-xs">
-        &copy; 2026 Tool Pulse. Sky & Emerald Admin Interface.
-    </footer>
+  // Handle Login
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.style.display = 'none';
 
-    <!-- Connects to main JS script -->
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let visitors = localStorage.getItem('totalVisitors');
-            if (!visitors || isNaN(visitors)) {
-                visitors = 10000;
-                localStorage.setItem('totalVisitors', visitors);
-            }
-            document.getElementById('adminTotalVisitors').innerText = parseInt(visitors, 10).toLocaleString();
-            document.getElementById('baseVisitorInput').value = visitors;
-        });
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        function updateBaseCounter() {
-            const inputElem = document.getElementById('baseVisitorInput');
-            const newVal = parseInt(inputElem.value, 10);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      loginForm.reset();
+    } catch (error) {
+      errorMsg.textContent = "Error: " + error.message;
+      errorMsg.style.display = 'block';
+    }
+  });
 
-            if (!isNaN(newVal) && newVal >= 0) {
-                localStorage.setItem('totalVisitors', newVal);
-                document.getElementById('adminTotalVisitors').innerText = newVal.toLocaleString();
-                alert('কাউন্টার সফলভাবে আপডেট করা হয়েছে!');
-            } else {
-                alert('অনুগ্রহ করে একটি সঠিক ধনাত্মক সংখ্যা দিন।');
-            }
-        }
-    </script>
+  // Handle Logout
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      alert("Error logging out: " + error.message);
+    }
+  });
+
+  // Auth State Listener
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loginBox.classList.add('hidden');
+      adminContent.classList.remove('hidden');
+    } else {
+      loginBox.classList.remove('hidden');
+      adminContent.classList.add('hidden');
+    }
+  });
+</script>
+
 </body>
 </html>
