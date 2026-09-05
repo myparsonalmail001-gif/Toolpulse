@@ -3,150 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Toolpulse</title>
+    <title>Enterprise Admin Console - Toolpulse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --sidebar-width: 260px;
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
         }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f4f6f9; 
-            padding: 20px; 
-            color: #333;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed; inset: 0; background: #0f172a; display: flex; 
+            align-items: center; justify-content: center; z-index: 9999;
         }
-        .container { 
-            max-width: 900px; 
-            margin: 20px auto; 
-            background: #ffffff; 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+        .login-card {
+            background: #1e293b; padding: 40px; border-radius: 12px; width: 100%; 
+            max-width: 400px; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        h2, h3 { text-align: center; color: #1a73e8; margin-bottom: 20px; }
-        
-        /* Stats Grid Layout */
+        .login-card h2 { text-align: center; margin-bottom: 24px; color: #60a5fa; }
+        .login-card input {
+            width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #334155;
+            border-radius: 6px; background: #0f172a; color: #fff; outline: none;
+        }
+        .login-card button {
+            width: 100%; padding: 12px; background: var(--primary-color); color: #fff;
+            border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .login-card button:hover { background: #1d4ed8; }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width); background: #1e293b; color: #fff;
+            display: flex; flex-direction: column; transition: all 0.3s ease;
+            position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+        .sidebar-header {
+            padding: 20px; font-size: 20px; font-weight: bold; color: #60a5fa;
+            border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-menu { list-style: none; padding: 20px 0; }
+        .nav-item {
+            padding: 14px 24px; display: flex; align-items: center; gap: 12px;
+            color: #94a3b8; cursor: pointer; transition: 0.2s; font-weight: 500;
+        }
+        .nav-item:hover, .nav-item.active { background: #334155; color: #fff; border-left: 4px solid #60a5fa; }
+
+        /* Main Content Layout */
+        .main-wrapper {
+            margin-left: var(--sidebar-width); flex: 1; display: flex; 
+            flex-direction: column; width: calc(100% - var(--sidebar-width));
+        }
+        .top-navbar {
+            background: #fff; padding: 16px 24px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .content-body { padding: 24px; overflow-y: auto; }
+
+        /* Dashboard Cards */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; margin-bottom: 24px;
         }
         .stat-card {
-            background: linear-gradient(135deg, #1a73e8, #0d47a1);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: var(--card-bg); padding: 20px; border-radius: 10px;
+            border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        .stat-card.green {
-            background: linear-gradient(135deg, #2e7d32, #1b5e20);
-        }
-        .stat-card.orange {
-            background: linear-gradient(135deg, #f57c00, #e65100);
-        }
-        .stat-card h4 { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
-        .stat-card .number { font-size: 28px; font-weight: bold; }
+        .stat-card .title { font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .stat-card .value { font-size: 28px; font-weight: bold; margin-top: 8px; color: var(--text-main); }
+        .stat-card .badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-top: 8px; }
+        .badge-green { background: #dcfce7; color: #166534; }
 
-        /* Form & Inputs */
-        .login-box { max-width: 450px; margin: 50px auto; }
-        .form-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
+        /* Forms & Tables */
+        .form-card, .table-card {
+            background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 24px;
         }
-        input, textarea, button { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border: 1px solid #ccc; 
-            border-radius: 6px; 
-            font-size: 14px;
+        input, textarea {
+            width: 100%; padding: 10px 14px; margin-top: 8px; margin-bottom: 16px;
+            border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;
         }
         textarea { resize: vertical; height: 80px; }
-        button { 
-            background: #1a73e8; 
-            color: white; 
-            border: none; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: background 0.3s ease;
-        }
-        button:hover { background: #1557b0; }
-        #admin-content { display: none; }
-
-        /* Tools List Styling */
-        .tool-card { 
-            border: 1px solid #e0e0e0; 
-            padding: 15px; 
-            margin-top: 12px; 
-            border-radius: 6px; 
-            background: #ffffff; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .tool-info { max-width: 80%; }
-        .tool-info strong { font-size: 16px; color: #222; }
-        .tool-info small { color: #666; word-break: break-all; }
-        .delete-btn { 
-            width: auto; 
-            padding: 8px 14px; 
-            background: #dc3545; 
-            margin: 0; 
-            font-size: 13px;
-        }
-        .delete-btn:hover { background: #bd2130; }
-        .logout-btn { background: #6c757d; margin-top: 30px; }
-        .logout-btn:hover { background: #5a6268; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--primary-color); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-danger { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-danger:hover { background: #dc2626; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: var(--text-muted); font-size: 13px; }
     </style>
 </head>
 <body>
 
-<!-- লগইন সেকশন -->
-<div class="container login-box" id="login-box">
-    <h2>Admin Login</h2>
-    <input type="email" id="email" placeholder="Email Address">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login to Dashboard</button>
+<!-- লগইন স্ক্রিন -->
+<div class="login-screen" id="login-box">
+    <div class="login-card">
+        <h2>Enterprise Login</h2>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login to Console</button>
+    </div>
+</div>
+
+<!-- সাইডবার -->
+<div class="sidebar" id="sidebar" style="display:none;">
+    <div class="sidebar-header">
+        <i class="fa-solid fa-gauge"></i> Toolpulse
+    </div>
+    <ul class="nav-menu">
+        <li class="nav-item active"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+    </ul>
 </div>
 
 <!-- মূল ড্যাশবোর্ড -->
-<div class="container" id="admin-content">
-    <h2>Toolpulse Overview Dashboard</h2>
-    
-    <!-- ড্যাশবোর্ড ট্র্যাকিং ও স্ট্যাটস -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h4>TOTAL ACTIVE TOOLS</h4>
-            <div class="number" id="total-tools-count">0</div>
-        </div>
-        <div class="stat-card green">
-            <h4>SERVER STATUS</h4>
-            <div class="number">Active (200 OK)</div>
-        </div>
-        <div class="stat-card orange">
-            <h4>DATABASE CONNECTION</h4>
-            <div class="number">Firestore Online</div>
-        </div>
+<div class="main-wrapper" id="admin-content" style="display:none;">
+    <div class="top-navbar">
+        <h3>Admin Management Console</h3>
+        <button onclick="logout()" style="width: auto; padding: 8px 16px; background:#64748b; color:white; border:none; border-radius:6px; cursor:pointer;">Logout</button>
     </div>
 
-    <!-- নতুন টুলস যোগ করার ফর্ম -->
-    <div class="form-section">
-        <h3>নতুন টুল যুক্ত করুন</h3>
-        <input type="text" id="tool-name" placeholder="টুলের নাম (যেমন: Image Resizer)">
-        <input type="text" id="tool-link" placeholder="টুলের লিংক (যেমন: /tools/resizer.html)">
-        <textarea id="tool-desc" placeholder="টুলের সংক্ষিপ্ত বিবরণ"></textarea>
-        <button onclick="addTool()">Add Tool</button>
+    <div class="content-body">
+        <!-- স্ট্যাটস কার্ডস -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="title">Total Active Tools</div>
+                <div class="value" id="total-tools-count">0</div>
+                <span class="badge badge-green">Live Firestore Sync</span>
+            </div>
+            <div class="stat-card">
+                <div class="title">System Status</div>
+                <div class="value" style="font-size:20px; color:#166534;">Operational</div>
+                <span class="badge badge-green">Connected</span>
+            </div>
+        </div>
+
+        <!-- টুলস যোগ করার ফর্ম -->
+        <div class="form-card">
+            <h3 style="margin-bottom:15px; color:#1e293b;">নতুন টুল যুক্ত করুন</h3>
+            <input type="text" id="tool-name" placeholder="টুলের নাম (যেমন: Image Resizer)">
+            <input type="text" id="tool-link" placeholder="টুলের লিংক (যেমন: /tools/resizer.html)">
+            <textarea id="tool-desc" placeholder="টুলের সংক্ষিপ্ত বিবরণ"></textarea>
+            <button class="btn-primary" onclick="addTool()">Add New Tool</button>
+        </div>
+
+        <!-- টুলস তালিকা -->
+        <div class="table-card">
+            <h3 style="color:#1e293b;">বর্তমান সকল টুলস</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>টুলের নাম</th>
+                        <th>লিংক</th>
+                        <th>বিবরণ</th>
+                        <th>অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="tools-table-body">
+                    <tr><td colspan="4">লোডিং হচ্ছে...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <h3>বর্তমান সকল টুলস</h3>
-    <div id="tools-list">লোডিং হচ্ছে...</div>
-
-    <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
 <!-- Firebase SDK Integration -->
@@ -169,34 +192,30 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Login
+  // Login Function
   window.login = function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    if (!email || !password) {
-      alert("অনুগ্রহ করে ইমেইল এবং পাসওয়ার্ড দিন।");
-      return;
-    }
-
+    if(!email || !password) return alert("ইমেইল ও পাসওয়ার্ড প্রদান করুন");
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => alert("Login Successful!"))
       .catch(error => alert("Error: " + error.message));
   };
 
-  // Logout
+  // Logout Function
   window.logout = function() {
-    signOut(auth).then(() => alert("Logged out successfully!"));
+    signOut(auth);
   };
 
   // Auth State Listener
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('login-box').style.display = 'none';
-      document.getElementById('admin-content').style.display = 'block';
+      document.getElementById('sidebar').style.display = 'flex';
+      document.getElementById('admin-content').style.display = 'flex';
       loadTools();
     } else {
-      document.getElementById('login-box').style.display = 'block';
+      document.getElementById('login-box').style.display = 'flex';
+      document.getElementById('sidebar').style.display = 'none';
       document.getElementById('admin-content').style.display = 'none';
     }
   });
@@ -207,23 +226,15 @@
     const link = document.getElementById('tool-link').value;
     const desc = document.getElementById('tool-desc').value;
 
-    if (!name || !link) {
-      alert("অনুগ্রহ করে টুলের নাম এবং লিংক পূরণ করুন।");
-      return;
-    }
+    if (!name || !link) return alert("টুলের নাম ও লিংক দেওয়া আবশ্যক!");
 
     try {
       await addDoc(collection(db, "tools"), {
-        name: name,
-        link: link,
-        desc: desc,
-        createdAt: new Date()
+        name, link, desc, createdAt: new Date()
       });
-
       document.getElementById('tool-name').value = '';
       document.getElementById('tool-link').value = '';
       document.getElementById('tool-desc').value = '';
-
       alert("টুল সফলভাবে যুক্ত হয়েছে!");
       loadTools();
     } catch (error) {
@@ -231,41 +242,35 @@
     }
   };
 
-  // Fetch Tools and Update Active Tools Count
+  // Fetch Tools Function
   async function loadTools() {
-    const listContainer = document.getElementById('tools-list');
-    const countElement = document.getElementById('total-tools-count');
-    listContainer.innerHTML = 'লোডিং হচ্ছে...';
+    const tbody = document.getElementById('tools-table-body');
+    const count = document.getElementById('total-tools-count');
+    tbody.innerHTML = '<tr><td colspan="4">লোডিং হচ্ছে...</td></tr>';
 
     try {
       const querySnapshot = await getDocs(collection(db, "tools"));
-      listContainer.innerHTML = '';
-      
-      // Update count automatically
-      countElement.textContent = querySnapshot.size;
+      tbody.innerHTML = '';
+      count.textContent = querySnapshot.size;
 
       if (querySnapshot.empty) {
-        listContainer.innerHTML = '<p style="text-align:center; color:#777;">কোনো টুল পাওয়া যায়নি।</p>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">কোনো টুল পাওয়া যায়নি।</td></tr>';
         return;
       }
 
       querySnapshot.forEach(docSnap => {
         const data = docSnap.data();
-        const card = document.createElement('div');
-        card.className = 'tool-card';
-        card.innerHTML = `
-          <div class="tool-info">
-            <strong>${data.name}</strong><br>
-            <small><a href="${data.link}" target="_blank">${data.link}</a></small>
-            <p style="margin-top: 4px; color: #555; font-size: 13px;">${data.desc || ''}</p>
-          </div>
-          <button class="delete-btn" onclick="deleteTool('${docSnap.id}')">Delete</button>
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${data.name}</strong></td>
+          <td><a href="${data.link}" target="_blank" style="color:#2563eb;">${data.link}</a></td>
+          <td>${data.desc || '-'}</td>
+          <td><button class="btn-danger" onclick="deleteTool('${docSnap.id}')">Delete</button></td>
         `;
-        listContainer.appendChild(card);
+        tbody.appendChild(tr);
       });
     } catch (error) {
-      listContainer.innerHTML = '<p style="color:red; text-align:center;">ত্রুটি: টুল লোড করা যাচ্ছে না।</p>';
-      console.error("Error loading tools: ", error);
+      tbody.innerHTML = '<tr><td colspan="4" style="color:red;">ত্রুটি: টুল লোড করা যাচ্ছে না।</td></tr>';
     }
   }
 
@@ -274,7 +279,6 @@
     if (confirm("আপনি কি নিশ্চিত যে এই টুলটি মুছে ফেলতে চান?")) {
       try {
         await deleteDoc(doc(db, "tools", id));
-        alert("টুল মুছে ফেলা হয়েছে!");
         loadTools();
       } catch (error) {
         alert("Error deleting tool: " + error.message);
