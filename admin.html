@@ -6,39 +6,47 @@
     <title>Admin Panel - Toolpulse</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; margin-top: 0; }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .container { max-width: 650px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2, h3 { text-align: center; color: #333; }
+        input, textarea, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         button { background: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background: #0056b3; }
-        .hidden { display: none; }
-        .error-message { color: #dc3545; font-size: 14px; margin-bottom: 10px; display: none; }
+        #admin-content { display: none; }
+        .tool-card { border: 1px solid #ddd; padding: 12px; margin-top: 10px; border-radius: 5px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; }
+        .delete-btn { width: auto; padding: 6px 12px; background: #dc3545; margin: 0; }
     </style>
 </head>
 <body>
 
-<!-- Login Form -->
 <div class="container" id="login-box">
     <h2>Admin Login</h2>
-    <form id="login-form">
-        <div id="error-msg" class="error-message"></div>
-        <input type="email" id="email" placeholder="Email" required autocomplete="username">
-        <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
-        <button type="submit" id="btn-login">Login</button>
-    </form>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
 </div>
 
-<!-- Admin Content -->
-<div class="container hidden" id="admin-content">
-    <h2>Welcome to Admin Panel</h2>
-    <p>আপনি সফলভাবে এডমিন প্যানেলে প্রবেশ করেছেন!</p>
-    <button id="btn-logout" style="background: #dc3545;">Logout</button>
+<div class="container" id="admin-content">
+    <h2>Toolpulse Admin Panel</h2>
+    
+    <div style="border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+        <h3>নতুন টুল যুক্ত করুন</h3>
+        <input type="text" id="tool-name" placeholder="টুলের নাম (যেমন: Image Resizer)">
+        <input type="text" id="tool-link" placeholder="টুলের লিংক (যেমন: /tools/resizer.html)">
+        <textarea id="tool-desc" placeholder="টুলের বিবরণ"></textarea>
+        <button onclick="addTool()">Add Tool</button>
+    </div>
+
+    <h3>বর্তমান সকল টুলস</h3>
+    <div id="tools-list">লোডিং হচ্ছে...</div>
+
+    <button onclick="logout()" style="background: #6c757d; margin-top: 20px;">Logout</button>
 </div>
 
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAv0hl6l5bFHGK_aN2Ap_7iPGnnQftNPN8",
@@ -50,53 +58,106 @@
     measurementId: "G-0WEYMXY55F"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  const loginBox = document.getElementById('login-box');
-  const adminContent = document.getElementById('admin-content');
-  const loginForm = document.getElementById('login-form');
-  const logoutBtn = document.getElementById('btn-logout');
-  const errorMsg = document.getElementById('error-msg');
-
-  // Handle Login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errorMsg.style.display = 'none';
-
+  window.login = function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => alert("Login Successful!"))
+      .catch(error => alert("Error: " + error.message));
+  };
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      loginForm.reset();
-    } catch (error) {
-      errorMsg.textContent = "Error: " + error.message;
-      errorMsg.style.display = 'block';
-    }
-  });
+  window.logout = function() {
+    signOut(auth).then(() => alert("Logged out!"));
+  };
 
-  // Handle Logout
-  logoutBtn.addEventListener('click', async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      alert("Error logging out: " + error.message);
-    }
-  });
-
-  // Auth State Listener
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, user => {
     if (user) {
-      loginBox.classList.add('hidden');
-      adminContent.classList.remove('hidden');
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('admin-content').style.display = 'block';
+      loadTools();
     } else {
-      loginBox.classList.remove('hidden');
-      adminContent.classList.add('hidden');
+      document.getElementById('login-box').style.display = 'block';
+      document.getElementById('admin-content').style.display = 'none';
     }
   });
-</script>
 
+  window.addTool = async function() {
+    const name = document.getElementById('tool-name').value;
+    const link = document.getElementById('tool-link').value;
+    const desc = document.getElementById('tool-desc').value;
+
+    if (!name || !link) {
+      alert("অনুগ্রহ করে টুলের নাম এবং লিংক পূরণ করুন।");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "tools"), {
+        name: name,
+        link: link,
+        desc: desc,
+        createdAt: new Date()
+      });
+
+      document.getElementById('tool-name').value = '';
+      document.getElementById('tool-link').value = '';
+      document.getElementById('tool-desc').value = '';
+
+      alert("টুল সফলভাবে যুক্ত হয়েছে!");
+      loadTools();
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  };
+
+  async function loadTools() {
+    const listContainer = document.getElementById('tools-list');
+    listContainer.innerHTML = 'লোডিং হচ্ছে...';
+
+    try {
+      const querySnapshot = await getDocs(collection(db, "tools"));
+      listContainer.innerHTML = '';
+
+      if (querySnapshot.empty) {
+        listContainer.innerHTML = '<p style="text-align:center;">কোনো টুল পাওয়া যায়নি।</p>';
+        return;
+      }
+
+      querySnapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const card = document.createElement('div');
+        card.className = 'tool-card';
+        card.innerHTML = `
+          <div>
+            <strong>${data.name}</strong><br>
+            <small><a href="${data.link}" target="_blank">${data.link}</a></small>
+            <p style="margin: 4px 0 0; color: #666; font-size: 14px;">${data.desc || ''}</p>
+          </div>
+          <button class="delete-btn" onclick="deleteTool('${docSnap.id}')">Delete</button>
+        `;
+        listContainer.appendChild(card);
+      });
+    } catch (error) {
+      listContainer.innerHTML = 'ত্রুটি: টুল লোড করা যাচ্ছে না।';
+      console.error("Error loading tools: ", error);
+    }
+  }
+
+  window.deleteTool = async function(id) {
+    if (confirm("আপনি কি নিশ্চিত যে এই টুলটি মুছে ফেলতে চান?")) {
+      try {
+        await deleteDoc(doc(db, "tools", id));
+        alert("টুল মুছে ফেলা হয়েছে!");
+        loadTools();
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    }
+  };
+</script>
 </body>
 </html>
