@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Pulse - Admin Control Panel</title>
+    <!-- Tailwind CSS & FontAwesome Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-theme-gradient { 
+            background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%); 
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Admin Header Navigation -->
+    <header class="bg-theme-gradient text-white shadow-lg p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> Tool Pulse - Admin Dashboard
+            </h1>
+            <a href="instant.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+                <i class="fa-solid fa-globe"></i> Main Website
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="container mx-auto p-4 md:p-6 flex-grow max-w-5xl">
+        
+        <!-- Analytics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Total Visitors Card (Default 10,000+) -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-cyan-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Active Visitors</p>
+                    <h2 id="adminTotalVisitors" class="text-3xl font-extrabold text-cyan-700 mt-1">10,000</h2>
+                </div>
+                <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+
+            <!-- Ad Blocked Users (Spam Protection Tracking) -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-emerald-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ad Spam Protected</p>
+                    <h2 id="adminBlockedClicks" class="text-3xl font-extrabold text-emerald-700 mt-1">Active</h2>
+                </div>
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+            </div>
+
+            <!-- Active Utility Tools -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-indigo-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Tools</p>
+                    <h2 class="text-3xl font-extrabold text-indigo-700 mt-1">8 Tools</h2>
+                </div>
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-toolbox"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitor Control Panel -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-700 border-b pb-3 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-cyan-600"></i> Visitor Counter Management
+            </h3>
+
+            <div class="space-y-4 max-w-md">
+                <div>
+                    <label for="baseVisitorInput" class="block text-sm font-medium text-slate-600 mb-1">Set Base Visitor Starting Number</label>
+                    <input type="number" id="baseVisitorInput" value="10000" min="0" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <button type="button" onclick="updateBaseCounter()" class="bg-theme-gradient hover:opacity-95 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+                    Update Base Counter
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-center py-4 text-xs">
+        &copy; 2026 Tool Pulse. Sky & Emerald Admin Interface.
+    </footer>
+
+    <!-- Connects to main JS script -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let visitors = localStorage.getItem('totalVisitors');
+            if (!visitors || isNaN(visitors)) {
+                visitors = 10000;
+                localStorage.setItem('totalVisitors', visitors);
+            }
+            document.getElementById('adminTotalVisitors').innerText = parseInt(visitors, 10).toLocaleString();
+            document.getElementById('baseVisitorInput').value = visitors;
+        });
+
+        function updateBaseCounter() {
+            const inputElem = document.getElementById('baseVisitorInput');
+            const newVal = parseInt(inputElem.value, 10);
+
+            if (!isNaN(newVal) && newVal >= 0) {
+                localStorage.setItem('totalVisitors', newVal);
+                document.getElementById('adminTotalVisitors').innerText = newVal.toLocaleString();
+                alert('কাউন্টার সফলভাবে আপডেট করা হয়েছে!');
+            } else {
+                alert('অনুগ্রহ করে একটি সঠিক ধনাত্মক সংখ্যা দিন।');
+            }
+        }
+    </script>
+</body>
+</html>
