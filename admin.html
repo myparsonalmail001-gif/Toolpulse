@@ -13,23 +13,24 @@
             --bg-dark: #0f172a;
             --panel-bg: #1e293b;
             --card-bg: #334155;
-            --accent: #06b6d4; /* Matching script.js Cyan Theme */
+            --accent: #06b6d4;
             --text-light: #f8fafc;
             --text-dim: #94a3b8;
             --danger: #ef4444;
             --success: #10b981;
+            --warning: #f59e0b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: var(--bg-dark); color: var(--text-light); display: flex; min-height: 100vh; }
 
         /* Sidebar Navigation */
-        .sidebar { width: 260px; background: var(--panel-bg); padding: 20px; border-right: 1px solid #475569; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar { width: 270px; background: var(--panel-bg); padding: 20px; border-right: 1px solid #475569; display: flex; flex-direction: column; gap: 10px; }
         .sidebar h2 { font-size: 20px; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .nav-btn { background: transparent; color: var(--text-dim); border: none; padding: 12px 15px; text-align: left; font-size: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; width: 100%; font-weight: 600; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* Main Area */
+        /* Main Workspace */
         .main-content { flex: 1; padding: 25px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #475569; padding-bottom: 15px; }
 
@@ -48,10 +49,16 @@
         /* Forms & Inputs */
         label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px; color: var(--text-light); }
         input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-dark); border: 1px solid #475569; color: #fff; border-radius: 6px; outline: none; font-size: 14px; }
+        textarea { height: 90px; resize: vertical; }
         .btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
         .btn-primary { background: var(--accent); color: #000; }
+
+        /* Table Design */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #475569; font-size: 13px; }
+        th { background: var(--card-bg); color: var(--accent); }
 
         /* Switch Styling */
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
@@ -61,26 +68,34 @@
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(22px); }
 
+        /* Badges */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-active { background: #15803d; color: #fff; }
+        .badge-blocked { background: #b91c1c; color: #fff; }
+
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
         .tool-card { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid #475569; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Controls -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <h2><i class="fa-solid fa-bolt"></i> Tool Pulse</h2>
         <button class="nav-btn active" onclick="switchTab('dashboard', this)">
-            <i class="fa-solid fa-chart-line"></i> Dashboard & Visitor
+            <i class="fa-solid fa-chart-line"></i> ড্যাশবোর্ড ও এনালিটিক্স
         </button>
-        <button class="nav-btn" onclick="switchTab('tools', this)">
-            <i class="fa-solid fa-screwdriver-wrench"></i> Engine Tools Switch
+        <button class="nav-btn" onclick="switchTab('users', this)">
+            <i class="fa-solid fa-users"></i> ইউজার লিস্ট ও ব্লক ম্যানেজমেন্ট
         </button>
         <button class="nav-btn" onclick="switchTab('ads', this)">
-            <i class="fa-solid fa-shield-halved"></i> Click Fraud Protection
+            <i class="fa-solid fa-rectangle-ad"></i> বিজ্ঞাপন প্লেসমেন্ট (৩ টি এড স্পেস)
+        </button>
+        <button class="nav-btn" onclick="switchTab('tools', this)">
+            <i class="fa-solid fa-screwdriver-wrench"></i> টুলস অন/অফ সুইচ
         </button>
         <button class="nav-btn" onclick="switchTab('settings', this)">
-            <i class="fa-solid fa-sliders"></i> Global Settings
+            <i class="fa-solid fa-sliders"></i> গ্লোবাল সেটিংস
         </button>
     </div>
 
@@ -89,79 +104,125 @@
         <div class="header">
             <h2>Tool Pulse Admin Console</h2>
             <button class="btn btn-danger" onclick="clearAdBlock()">
-                <i class="fa-solid fa-unlock"></i> Clear Ad Block State
+                <i class="fa-solid fa-unlock"></i> Clear Ad Spam Block
             </button>
         </div>
 
-        <!-- 1. Dashboard -->
+        <!-- ১. ড্যাশবোর্ড ট্যাব -->
         <div id="dashboard" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>Total Visitors (script.js Data)</h4>
-                    <div class="number" id="statVisitors">0</div>
+                    <h4>সর্বমোট ইউজার (Life Time)</h4>
+                    <div class="number" id="statLifetimeUsers">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Active Engine Tools</h4>
-                    <div class="number" id="statActiveTools">8</div>
+                    <h4>সক্রিয় ইউজার সংখ্যা</h4>
+                    <div class="number" id="statActiveUsers">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Ad Protection Status</h4>
+                    <h4>ব্লকড ইউজার সংখ্যা</h4>
+                    <div class="number" id="statBlockedUsers" style="color: var(--danger);">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>এড প্রটেকশন স্ট্যাটাস</h4>
                     <div class="number" id="statAdStatus" style="color: var(--success); font-size: 16px;">Active Protection</div>
                 </div>
             </div>
 
             <div class="card">
-                <h3><i class="fa-solid fa-chart-area"></i> Visitor Analytics</h3>
+                <h3><i class="fa-solid fa-chart-area"></i> ইউজার বৃদ্ধির গ্রাফ (User Growth Graph)</h3>
                 <canvas id="analyticsChart" style="max-height: 260px;"></canvas>
             </div>
         </div>
 
-        <!-- 2. Tools Management -->
+        <!-- ২. ইউজার লিস্ট ও ম্যানেজমেন্ট ট্যাব -->
+        <div id="users" class="tab-content">
+            <div class="card">
+                <h3><i class="fa-solid fa-users-gear"></i> নিবন্ধিত/ভিজিটর ইউজারদের তালিকা</h3>
+                <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 15px;">
+                    আপনার ওয়েবসাইটে আসা ইউজারদের তালিকা এবং তারা ব্লকড কিনা তা নিচে দেওয়া হলো। চাইলে ব্লক/আনব্লক করতে পারেন।
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>IP / ডিভাইস নেম</th>
+                            <th>যোগদানের তারিখ</th>
+                            <th>এড ক্লিকস</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Dynamic User Data -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ৩. ৩টি বিজ্ঞাপনের জায়গা পরিবর্তন ব্যবস্থা (Ads Management) -->
+        <div id="ads" class="tab-content">
+            <div class="card">
+                <h3><i class="fa-solid fa-rectangle-ad"></i> ৩ টি এড স্পেসের কোড/লিংক পরিবর্তন</h3>
+                <form onsubmit="saveAds(event)">
+                    <!-- Ad 1 -->
+                    <label>১. Sidebar Top Ad (Banner 1 Code / Image URL):</label>
+                    <input type="text" id="adCode1" placeholder="AdSense HTML Code / Image URL">
+                    <label>Target Click Link (Optional):</label>
+                    <input type="url" id="adLink1" placeholder="https://example.com">
+
+                    <hr style="border-color: #475569; margin: 15px 0;">
+
+                    <!-- Ad 2 -->
+                    <label>২. Sidebar Bottom Ad (Banner 2 Code / Image URL):</label>
+                    <input type="text" id="adCode2" placeholder="AdSense HTML Code / Image URL">
+                    <label>Target Click Link (Optional):</label>
+                    <input type="url" id="adLink2" placeholder="https://example.com">
+
+                    <hr style="border-color: #475569; margin: 15px 0;">
+
+                    <!-- Ad 3 -->
+                    <label>৩. Bottom Horizontal Banner Ad (Banner 3 Code / Image URL):</label>
+                    <input type="text" id="adCode3" placeholder="AdSense HTML Code / Image URL">
+                    <label>Target Click Link (Optional):</label>
+                    <input type="url" id="adLink3" placeholder="https://example.com">
+
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save Ad Places</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ৪. টুলস কন্ট্রোল -->
         <div id="tools" class="tab-content">
             <div class="card">
                 <h3><i class="fa-solid fa-wrench"></i> script.js Engine Tools Control</h3>
                 <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 15px;">
-                    আপনার `script.js` ফাইলের মূল ৮টি টুল অন/অফ করার কন্ট্রোল:
+                    আপনার `script.js` ফাইলের ৮টি মূল টুল চালুকৃত/বন্ধ রাখার সুইচার:
                 </p>
                 <div class="tools-grid" id="toolsGrid"></div>
             </div>
         </div>
 
-        <!-- 3. Ad Spam Protection Controls -->
-        <div id="ads" class="tab-content">
-            <div class="card">
-                <h3><i class="fa-solid fa-shield-cat"></i> Ad Click Spam Protection Settings</h3>
-                <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 15px;">
-                    `script.js`-এর প্রটেকশন অনুযায়ী ৬০ সেকেন্ডের মধ্যে ২বার ক্লিক করলে ৫ মিনিটের জন্য এড অটোমেটিক হাইড হয়ে যায়।
-                </p>
-                <form onsubmit="event.preventDefault(); alert('Settings Saved!');">
-                    <label>Click Limit Window (Seconds):</label>
-                    <input type="number" value="60" disabled>
-                    
-                    <label>Max Clicks Allowed:</label>
-                    <input type="number" value="2" disabled>
-
-                    <label>Auto Block Duration (Minutes):</label>
-                    <input type="number" value="5">
-
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Rules</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- 4. Global Settings -->
+        <!-- ৫. গ্লোবাল সেটিংস -->
         <div id="settings" class="tab-content">
             <div class="card">
-                <h3><i class="fa-solid fa-database"></i> Visitor Counter Management</h3>
-                <label>Set Total Visitor Count (Base Count):</label>
-                <input type="number" id="manualVisitorInput">
-                <button class="btn btn-success" onclick="updateVisitors()"><i class="fa-solid fa-rotate"></i> Update Visitors</button>
+                <h3><i class="fa-solid fa-database"></i> মোট ইউজার কাউন্টার পরিবর্তন</h3>
+                <label>লাইফটাইম ইউজার সংখ্যা ম্যানুয়ালি সেট করুন:</label>
+                <input type="number" id="manualUserCount">
+                <button class="btn btn-primary" onclick="updateTotalUsers()"><i class="fa-solid fa-rotate"></i> আপডেট কাউন্টার</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Mapping tools matching switchTool() in script.js
+        // Default Local Mock Users Dataset
+        let usersList = [
+            { id: "USR-101", ip: "192.168.1.10 (Windows)", joinDate: "2026-09-01", clicks: 1, status: "Active" },
+            { id: "USR-102", ip: "103.24.12.5 (Android)", joinDate: "2026-09-02", clicks: 3, status: "Blocked" },
+            { id: "USR-103", ip: "45.120.3.88 (iPhone)", joinDate: "2026-09-03", clicks: 0, status: "Active" }
+        ];
+
+        // Engine tools matching script.js
         const scriptTools = [
             { key: 'pdf-jpg', name: "PDF to JPG Converter", icon: "fa-file-pdf" },
             { key: 'jpg-pdf', name: "JPG to PDF Converter", icon: "fa-file-image" },
@@ -180,6 +241,50 @@
             btn.classList.add('active');
         }
 
+        // Render User List & Count Stats
+        function renderUserTable() {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+            
+            let activeCount = 0;
+            let blockedCount = 0;
+
+            usersList.forEach(user => {
+                if(user.status === 'Active') activeCount++;
+                if(user.status === 'Blocked') blockedCount++;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${user.id}</strong></td>
+                    <td>${user.ip}</td>
+                    <td>${user.joinDate}</td>
+                    <td>${user.clicks}</td>
+                    <td><span class="badge ${user.status === 'Active' ? 'badge-active' : 'badge-blocked'}">${user.status}</span></td>
+                    <td>
+                        <button class="btn ${user.status === 'Active' ? 'btn-danger' : 'btn-success'}" style="padding: 4px 8px; font-size: 11px;" onclick="toggleUserStatus('${user.id}')">
+                            ${user.status === 'Active' ? 'Block' : 'Unblock'}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Update Total Visitor / User Counters
+            let lifetimeUsers = localStorage.getItem('totalVisitors') || 10000;
+            document.getElementById('statLifetimeUsers').innerText = lifetimeUsers;
+            document.getElementById('statActiveUsers').innerText = activeCount;
+            document.getElementById('statBlockedUsers').innerText = blockedCount;
+            document.getElementById('manualUserCount').value = lifetimeUsers;
+        }
+
+        function toggleUserStatus(userId) {
+            const user = usersList.find(u => u.id === userId);
+            if(user) {
+                user.status = user.status === 'Active' ? 'Blocked' : 'Active';
+                renderUserTable();
+            }
+        }
+
         function renderTools() {
             const grid = document.getElementById('toolsGrid');
             grid.innerHTML = '';
@@ -193,7 +298,7 @@
                         <small style="color: var(--text-dim);">${tool.key}</small>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" checked onchange="alert('${tool.name} status toggled!')">
+                        <input type="checkbox" checked onchange="alert('${tool.name} স্ট্যাটাস পরিবর্তন হয়েছে!')">
                         <span class="slider"></span>
                     </label>
                 `;
@@ -201,12 +306,7 @@
             });
         }
 
-        // Sync local storage from script.js
         function syncLocalStorageData() {
-            const visitors = localStorage.getItem('totalVisitors') || 10000;
-            document.getElementById('statVisitors').innerText = visitors;
-            document.getElementById('manualVisitorInput').value = visitors;
-
             const adBlockUntil = localStorage.getItem('adBlockUntil');
             const now = new Date().getTime();
             if (adBlockUntil && now < parseInt(adBlockUntil, 10)) {
@@ -219,20 +319,35 @@
             }
         }
 
+        function saveAds(e) {
+            e.preventDefault();
+            const adsData = {
+                ad1: document.getElementById('adCode1').value,
+                link1: document.getElementById('adLink1').value,
+                ad2: document.getElementById('adCode2').value,
+                link2: document.getElementById('adLink2').value,
+                ad3: document.getElementById('adCode3').value,
+                link3: document.getElementById('adLink3').value
+            };
+            localStorage.setItem('siteAdsConfig', JSON.stringify(adsData));
+            alert('৩ টি বিজ্ঞাপন সফলভাবে আপডেট ও সেভ হয়েছে!');
+        }
+
         function clearAdBlock() {
             localStorage.removeItem('adBlockUntil');
-            alert('Ad protection block status cleared successfully!');
+            alert('এড ব্লক স্ট্যাটাস রিমুভ করা হয়েছে!');
             syncLocalStorageData();
         }
 
-        function updateVisitors() {
-            const val = document.getElementById('manualVisitorInput').value;
+        function updateTotalUsers() {
+            const val = document.getElementById('manualUserCount').value;
             localStorage.setItem('totalVisitors', val);
-            syncLocalStorageData();
-            alert('Visitor base count updated!');
+            renderUserTable();
+            alert('লাইফটাইম ইউজার সংখ্যা আপডেট করা হয়েছে!');
         }
 
         window.onload = function() {
+            renderUserTable();
             renderTools();
             syncLocalStorageData();
 
@@ -240,10 +355,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: ['১ম দিন', '২য় দিন', '৩য় দিন', '৪র্থ দিন', '৫ম দিন', '৬ষ্ঠ দিন', 'আজ'],
                     datasets: [{
-                        label: 'Script Tool Usage',
-                        data: [250, 400, 550, 700, 850, 1100, 1350],
+                        label: 'দৈনিক ইউজার বৃদ্ধি',
+                        data: [1200, 2400, 4100, 5800, 7900, 9200, 10000],
                         borderColor: '#06b6d4',
                         backgroundColor: 'rgba(6, 182, 212, 0.1)',
                         fill: true,
