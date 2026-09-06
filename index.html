@@ -52,7 +52,7 @@
                 <button type="button" onclick="switchTool('resizer')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Image Resizer</button>
                 <button type="button" onclick="switchTool('url-short')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">URL Shortener</button>
                 <button type="button" onclick="switchTool('qr-gen')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">QR Code</button>
-                <button type="button" onclick="switchTool('resize-kb')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">10 to 100 KB</button>
+                <button type="button" onclick="switchTool('resize-kb')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF & Image Compressor</button>
             </div>
 
             <!-- Live Visitor Counter & Dropdown -->
@@ -83,7 +83,7 @@
         <button type="button" onclick="switchTool('resizer')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-crop-simple"></i> Image Resizer (300x300)</button>
         <button type="button" onclick="switchTool('url-short')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-link"></i> URL Shortener</button>
         <button type="button" onclick="switchTool('qr-gen')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-qrcode"></i> QR Code Generator</button>
-        <button type="button" onclick="switchTool('resize-kb')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-compress"></i> 10 to 100 KB Compressor</button>
+        <button type="button" onclick="switchTool('resize-kb')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-compress"></i> PDF & Image Compressor</button>
     </div>
 
     <!-- Main Workspace -->
@@ -125,7 +125,7 @@
 
                 <div id="statusMessage" class="mt-3 text-xs font-semibold text-emerald-600 hidden"></div>
                 <div id="previewArea" class="mt-4 hidden w-full flex flex-col items-center justify-center text-sm text-slate-700"></div>
-                <div id="qrContainer" class="mt-4 flex flex-col items-center"></div>
+                <div id="qrContainer" class="mt-4 flex flex-col items-center gap-3"></div>
             </div>
 
             <!-- Action Button -->
@@ -195,6 +195,32 @@
                     <input type="text" id="textInput" placeholder="আপনার লিঙ্ক বা লেখা লিখুন..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                 `;
                 actionBtn.innerHTML = `<i class="fa-solid fa-qrcode"></i> Generate QR Code`;
+            } else if (toolKey === 'resize-kb') {
+                titleEl.innerText = "PDF & Image Compressor (10KB to 100KB)";
+                iconEl.className = "fa-solid fa-compress";
+                textEl.innerText = "আপনার PDF বা ছবি নির্বাচন করুন (সর্বোচ্চ ১০টি)";
+                inputContainer.innerHTML = `
+                    <div class="w-full space-y-3">
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-left">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-semibold text-slate-600">টার্গেট সাইজ সিলেক্ট করুন:</label>
+                                <span id="sliderVal" class="text-xs font-bold text-cyan-600">100 KB</span>
+                            </div>
+                            <input type="range" id="kbSlider" min="10" max="950" value="100" class="w-full accent-cyan-600 cursor-pointer" oninput="document.getElementById('sliderVal').innerText = this.value + ' KB'">
+                            <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                                <span>10 KB</span>
+                                <span>950 KB</span>
+                            </div>
+                        </div>
+                        <input type="file" id="fileInput" class="hidden" multiple onchange="handleFileSelect(event)">
+                        <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
+                            Choose Files (Max 10)
+                        </button>
+                    </div>
+                `;
+                actionBtn.innerHTML = `<i class="fa-solid fa-download"></i> Compress & Download`;
+                const fileInput = document.getElementById('fileInput');
+                fileInput.setAttribute('accept', 'application/pdf, image/*');
             } else {
                 inputContainer.innerHTML = `
                     <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
@@ -269,15 +295,6 @@
                         fileInput.setAttribute('accept', 'image/*');
                         fileInput.removeAttribute('multiple');
                         break;
-                    case 'resize-kb':
-                        titleEl.innerText = "PDF & Image Compressor (10KB to 100KB)";
-                        iconEl.className = "fa-solid fa-compress";
-                        textEl.innerText = "আপনার PDF বা ছবি নির্বাচন করুন (১০-১০০ KB করার জন্য)";
-                        selectBtn.innerText = "Choose File";
-                        actionBtn.innerHTML = `<i class="fa-solid fa-download"></i> Compress & Download`;
-                        fileInput.setAttribute('accept', 'application/pdf, image/*');
-                        fileInput.removeAttribute('multiple');
-                        break;
                 }
             }
             document.getElementById('dropdownMenu').classList.add('hidden');
@@ -289,8 +306,13 @@
             const previewArea = document.getElementById('previewArea');
             if (selectedFiles.length === 0) return;
 
+            if (currentTool === 'resize-kb' && selectedFiles.length > 10) {
+                alert("আপনি একসাথে সর্বোচ্চ ১০টি ফাইল প্রসেস করতে পারবেন। প্রথম ১০টি ফাইল নির্বাচন করা হলো।");
+                selectedFiles = selectedFiles.slice(0, 10);
+            }
+
             previewArea.classList.remove('hidden');
-            if (currentTool === 'merge-pdf' || currentTool === 'jpg-pdf') {
+            if (currentTool === 'merge-pdf' || currentTool === 'jpg-pdf' || currentTool === 'resize-kb') {
                 let listHTML = '<strong>নির্বাচিত ফাইলসমূহ:</strong><ol class="list-decimal text-left pl-5 mt-2 space-y-1">';
                 selectedFiles.forEach(f => {
                     listHTML += `<li>${f.name} <span class="text-xs text-slate-500">(${(f.size / 1024).toFixed(1)} KB)</span></li>`;
@@ -343,11 +365,13 @@
                         executeImageResizer300(selectedFiles[0]);
                         break;
                     case 'resize-kb':
-                        const file = selectedFiles[0];
-                        if (file.type === "application/pdf") {
-                            await executePDFCompress(file);
-                        } else if (file.type.startsWith("image/")) {
-                            await executeImageCompress(file);
+                        const targetKB = parseInt(document.getElementById('kbSlider').value);
+                        for (let file of selectedFiles) {
+                            if (file.type === "application/pdf") {
+                                await executePDFCompress(file, targetKB);
+                            } else if (file.type.startsWith("image/")) {
+                                await executeImageCompress(file, targetKB);
+                            }
                         }
                         break;
                 }
@@ -508,35 +532,70 @@
         function executeQRGenerator() {
             const inputVal = document.getElementById('textInput').value.trim();
             if (!inputVal) return alert("লেখা বা লিঙ্ক দিন!");
-            document.getElementById('qrContainer').innerHTML = '';
-            new QRCode(document.getElementById('qrContainer'), { text: inputVal, width: 160, height: 160 });
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+
+            const qrBox = document.createElement('div');
+            container.appendChild(qrBox);
+
+            new QRCode(qrBox, { text: inputVal, width: 160, height: 160 });
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.type = 'button';
+            downloadBtn.className = 'mt-3 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow transition flex items-center gap-2';
+            downloadBtn.innerHTML = `<i class="fa-solid fa-download"></i> Download QR Code`;
+            downloadBtn.onclick = function() {
+                const img = qrBox.querySelector('img');
+                const canvas = qrBox.querySelector('canvas');
+                let imgData = '';
+                if (img && img.src) {
+                    imgData = img.src;
+                } else if (canvas) {
+                    imgData = canvas.toDataURL('image/png');
+                }
+
+                if (imgData) {
+                    const a = document.createElement('a');
+                    a.href = imgData;
+                    a.download = 'qrcode.png';
+                    a.click();
+                } else {
+                    alert("QR Code ডাউনলোড করা যাচ্ছে না, আবার চেষ্টা করুন।");
+                }
+            };
+
+            container.appendChild(downloadBtn);
             showStatus("QR Code তৈরি সম্পন্ন!", true);
         }
 
-        async function executePDFCompress(file) {
-            showStatus("PDF কমপ্রেস করা হচ্ছে...");
+        async function executePDFCompress(file, targetKB = 100) {
+            showStatus(`PDF (${file.name}) কমপ্রেস করা হচ্ছে...`);
             try {
                 const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
                 const { jsPDF } = window.jspdf;
                 let doc = null;
+                
+                let scale = targetKB < 100 ? 0.5 : targetKB < 300 ? 0.7 : 0.9;
+                let quality = targetKB < 100 ? 0.2 : targetKB < 300 ? 0.4 : 0.7;
+
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 0.8 });
+                    const viewport = page.getViewport({ scale: scale });
                     const canvas = document.createElement('canvas');
                     canvas.height = viewport.height; canvas.width = viewport.width;
                     await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                    const imgData = canvas.toDataURL('image/jpeg', 0.25);
+                    const imgData = canvas.toDataURL('image/jpeg', quality);
                     if (i === 1) doc = new jsPDF('p', 'pt', [viewport.width, viewport.height]);
                     else doc.addPage([viewport.width, viewport.height], 'p');
                     doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
                 }
                 downloadBlob(await doc.output('blob').arrayBuffer(), `compressed_${file.name}`, "application/pdf");
                 showStatus("PDF কমপ্রেস সম্পন্ন!", true);
-            } catch(e) { alert("সমস্যা হয়েছে!"); }
+            } catch(e) { alert("PDF কমপ্রেস করতে সমস্যা হয়েছে!"); }
         }
 
-        async function executeImageCompress(file) {
-            showStatus("ছবি কমপ্রেস করা হচ্ছে...");
+        async function executeImageCompress(file, targetKB = 100) {
+            showStatus(`ছবি (${file.name}) কমপ্রেস করা হচ্ছে...`);
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
@@ -544,11 +603,29 @@
                 img.src = e.target.result;
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
-                    canvas.width = img.width > 800 ? 800 : img.width;
-                    canvas.height = (img.height * canvas.width) / img.width;
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const link = document.centerElement('a');
-                    link.href = canvas.toDataURL('image/jpeg', 0.3);
+                    
+                    let maxDimension = targetKB < 100 ? 600 : targetKB < 300 ? 1000 : 1600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxDimension || height > maxDimension) {
+                        if (width > height) {
+                            height = Math.round((height * maxDimension) / width);
+                            width = maxDimension;
+                        } else {
+                            width = Math.round((width * maxDimension) / height);
+                            height = maxDimension;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+                    let quality = targetKB < 100 ? 0.3 : targetKB < 300 ? 0.6 : 0.85;
+
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/jpeg', quality);
                     link.download = `compressed_${file.name}`;
                     link.click();
                     showStatus("ছবি ডাউনলোড সম্পন্ন!", true);
