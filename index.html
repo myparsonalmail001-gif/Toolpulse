@@ -15,6 +15,9 @@
     <meta name="revisit-after" content="2 days">
     <meta name="google-site-verification" content="Yrzv35hpzGMBk2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
 
+    <!-- Favicon (SEO & Branding Fix) -->
+    <link rel="icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico" type="image/x-icon">
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://myparsonalmail001-gif.github.io/Toolpulse/">
 
@@ -36,13 +39,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- PDF, QR & Conversion Libraries -->
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- PDF, QR & Conversion Libraries (Added defer for performance & SEO) -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 
     <style>
         .bg-theme-gradient { 
@@ -182,9 +185,9 @@
         <!-- Dynamic Work Area -->
         <main class="md:col-span-3 bg-white border border-slate-200 shadow-sm rounded-2xl p-6 flex flex-col items-center justify-between min-h-[460px]">
             
-            <h1 id="toolTitle" class="text-xl md:text-2xl font-bold text-cyan-800 border-b-2 border-emerald-400 pb-2 mb-4 w-full text-center">
+            <h2 id="toolTitle" class="text-xl md:text-2xl font-bold text-cyan-800 border-b-2 border-emerald-400 pb-2 mb-4 w-full text-center">
                 PDF Merger Tool
-            </h1>
+            </h2>
 
             <div id="workBox" class="w-full flex-grow flex flex-col items-center justify-center p-6 my-2 border-2 border-dashed border-cyan-300 bg-cyan-50/40 rounded-xl text-center">
                 <div class="w-20 h-20 bg-theme-gradient text-white rounded-full flex items-center justify-center text-3xl shadow-md mb-3">
@@ -222,7 +225,8 @@
     <!-- SEO Content Section -->
     <section class="bg-white border-t border-slate-200 mt-8 py-8">
         <div class="container mx-auto px-4 max-w-5xl">
-            <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tool Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h2>
+            <!-- Fixed H1 for clear SEO Hierarchy -->
+            <h1 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tool Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h1>
             <p class="text-slate-600 text-sm leading-relaxed mb-6 text-center">
                 Tool Pulse হল একটি ফ্রি অনলাইন টুল প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর ও কমপ্রেস করতে পারবেন। আমাদের সার্ভিস সম্পূর্ণ নিরাপদ এবং কোনো ফাইল সার্ভারে সেভ রাখা হয় না।
             </p>
@@ -263,14 +267,16 @@
     </footer>
 
     <script>
-        if (window.pdfjsLib) {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.pdfjsLib) {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+            }
+        });
 
         let currentTool = 'merge-pdf';
         let selectedFiles = [];
 
-        // 10,000+ Live Visitor Counter Simulation
+        // Live Visitor Counter Simulation
         let count = parseInt(localStorage.getItem('visitor_count')) || 10248;
         function updateVisitorCount() {
             document.getElementById('visitorCount').innerText = count.toLocaleString('en-US');
@@ -501,7 +507,7 @@
             }
         }
 
-        // Ultra Clear PDF Compression Algorithm (High Vector DPI Rendering)
+        // Ultra Clear PDF Compression Algorithm
         async function executePDFCompressUltraClear(file, targetKB = 100) {
             try {
                 const arrayBuffer = await file.arrayBuffer();
