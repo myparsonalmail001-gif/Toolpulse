@@ -2,9 +2,35 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="Yrzv35hpzGMBk2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Pulse - Utility & File Tools</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Tool Pulse - Free Online PDF & Image Converter Tools</title>
+    <meta name="title" content="Tool Pulse - Free Online PDF & Image Converter Tools">
+    <meta name="description" content="Free online utility tools by Tool Pulse: Convert PDF to JPG, JPG to PDF, PDF to Word, Merge PDF, Compress PDF/Images (10KB to 950KB), URL Shortener, and QR Code Generator. Fast, secure & easy to use.">
+    <meta name="keywords" content="PDF to JPG, JPG to PDF, PDF to Word, Word to PDF, Merge PDF, Image Resizer, 300x300 resizer, PDF compressor, URL Shortener, QR Code Generator, Tool Pulse">
+    <meta name="author" content="Tool Pulse">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Bengali, English">
+    <meta name="revisit-after" content="2 days">
+    <meta name="google-site-verification" content="Yrzv35hpzGMBk2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://myparsonalmail001-gif.github.io/Toolpulse/">
+
+    <!-- Open Graph / Facebook / LinkedIn Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
+    <meta property="og:title" content="Tool Pulse - Free Online Utility & File Tools">
+    <meta property="og:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse.">
+    <meta property="og:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
+    <meta property="twitter:title" content="Tool Pulse - Free Online Utility & File Tools">
+    <meta property="twitter:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse.">
+    <meta property="twitter:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
 
     <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,6 +57,58 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://myparsonalmail001-gif.github.io/Toolpulse/#website",
+          "url": "https://myparsonalmail001-gif.github.io/Toolpulse/",
+          "name": "Tool Pulse",
+          "description": "Free Online File Converters and Utility Tools",
+          "inLanguage": "bn"
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://myparsonalmail001-gif.github.io/Toolpulse/#webapp",
+          "url": "https://myparsonalmail001-gif.github.io/Toolpulse/",
+          "name": "Tool Pulse Utilities",
+          "applicationCategory": "UtilityApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Tool Pulse দিয়ে কি বিনামূল্যে PDF ফাইল কনভার্ট করা যায়?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "হ্যাঁ, Tool Pulse এর সকল টুল সম্পূর্ণ বিনামূল্যে এবং নিরাপদভাবে ব্যবহার করা যায়।"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Tool Pulse এ ফাইল সাইজ কিভাবে কমাবো?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "আমাদের 10 KB to 950 KB Converter টুল ব্যবহার করে সহজেই PDF এবং ছবির সাইজ কোয়ালিটি ঠিক রেখে কমপ্রেস করতে পারবেন।"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -39,8 +117,8 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             
             <!-- Brand & Top Horizontal Bar -->
-            <div class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pr-4 text-xs md:text-sm font-medium no-scrollbar">
-                <a href="#" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white">
+            <nav class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pr-4 text-xs md:text-sm font-medium no-scrollbar" aria-label="Main Navigation">
+                <a href="#" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white" title="Tool Pulse Home">
                     <i class="fa-solid fa-bolt text-yellow-300"></i> Tool Pulse
                 </a>
                 <button type="button" onclick="switchTool('pdf-jpg')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to JPG</button>
@@ -53,7 +131,7 @@
                 <button type="button" onclick="switchTool('url-short')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">URL Shortener</button>
                 <button type="button" onclick="switchTool('qr-gen')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">QR Code</button>
                 <button type="button" onclick="switchTool('resize-kb')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">10 KB to 950 KB Converter</button>
-            </div>
+            </nav>
 
             <!-- Live Visitor Counter & Dropdown -->
             <div class="flex items-center gap-3">
@@ -65,7 +143,7 @@
                     Live Visitors: <span id="visitorCount" class="text-yellow-300 font-bold">10,248</span>
                 </div>
 
-                <button id="menuBtn" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-white text-2xl px-2 focus:outline-none">
+                <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-white text-2xl px-2 focus:outline-none">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
             </div>
@@ -140,6 +218,49 @@
 
         </main>
     </div>
+
+    <!-- SEO Content Section -->
+    <section class="bg-white border-t border-slate-200 mt-8 py-8">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tool Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h2>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6 text-center">
+                Tool Pulse হল একটি ফ্রি অনলাইন টুল প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর ও কমপ্রেস করতে পারবেন। আমাদের সার্ভিস সম্পূর্ণ নিরাপদ এবং কোনো ফাইল সার্ভারে সেভ রাখা হয় না।
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <h3 class="font-bold text-cyan-800 mb-2">⚡ ফ্রি PDF ও ইমেজ কনভার্টার</h3>
+                    <p class="text-slate-600">PDF to JPG, JPG to PDF, PDF to Word, Word to PDF এর মতো দরকারি কাজগুলো এক ক্লিকেই করতে পারবেন।</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <h3 class="font-bold text-cyan-800 mb-2">📐 ফাইল কমপ্রেসর ও রেজোলিউশন টুল</h3>
+                    <p class="text-slate-600">ছবি ৩০০x৩০০ পিক্সেলে রিসাইজ করুন অথবা ১০ KB থেকে ৯৫০ KB এর ভেতরে PDF এবং ছবি কমপ্রেস করে সাইজ কমিয়ে নিন।</p>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">সাধারণ জিজ্ঞাসিত প্রশ্নাবলী (FAQ)</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 border rounded-lg bg-slate-50">
+                        <h4 class="font-semibold text-slate-700">প্রশ্ন: Tool Pulse কি সম্পূর্ণ ফ্রি?</h4>
+                        <p class="text-slate-600 mt-1">উত্তর: হ্যাঁ, টুলগুলো সম্পূর্ণ বিনামূল্যে ব্যবহার করা যায়।</p>
+                    </div>
+                    <div class="p-4 border rounded-lg bg-slate-50">
+                        <h4 class="font-semibold text-slate-700">প্রশ্ন: আমার আপলোড করা ফাইলের নিরাপত্তা কেমন?</h4>
+                        <p class="text-slate-600 mt-1">উত্তর: Tool Pulse সরাসরি ক্লায়েন্ট সাইড বা আপনার ব্রাউজারেই কাজ সম্পন্ন করে, ফলে আপনার ফাইল নিরাপদে থাকে।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2026 Tool Pulse. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
         if (window.pdfjsLib) {
@@ -383,11 +504,9 @@
         // Ultra Clear PDF Compression Algorithm (High Vector DPI Rendering)
         async function executePDFCompressUltraClear(file, targetKB = 100) {
             try {
-                // Check if file is small enough to optimize vector stream without rasterizing
                 const arrayBuffer = await file.arrayBuffer();
                 
                 if (file.size <= targetKB * 1024) {
-                    // File is already under target KB, just pass original
                     downloadBlob(arrayBuffer, `compressed_${file.name}`, "application/pdf");
                     return;
                 }
@@ -396,7 +515,6 @@
                 const { jsPDF } = window.jspdf;
                 let doc = null;
 
-                // High Render Scale for Sharp Text
                 let renderScale = 2.5; 
                 let imgQuality = 0.82;
 
@@ -423,13 +541,11 @@
                     canvas.height = viewport.height; 
                     canvas.width = viewport.width;
 
-                    // Text anti-aliasing & high clarity options
                     ctx.imageSmoothingEnabled = true;
                     ctx.imageSmoothingQuality = 'high';
 
                     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
                     
-                    // Convert canvas to crisp JPEG image stream
                     const imgData = canvas.toDataURL('image/jpeg', imgQuality);
 
                     const pdfPageWidth = viewport.width / renderScale;
