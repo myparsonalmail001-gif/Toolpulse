@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Primary Meta Tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- 1. Primary Search Engine Meta Tags -->
     <title>Tool Pulse - Free Online PDF & Image Converter Tools</title>
     <meta name="title" content="Tool Pulse - Free Online PDF & Image Converter Tools">
     <meta name="description" content="Free online utility tools by Tool Pulse: Convert PDF to JPG, JPG to PDF, PDF to Word, Merge PDF, Compress PDF/Images (10KB to 950KB), URL Shortener, and QR Code Generator. Fast, secure & easy to use.">
     <meta name="keywords" content="PDF to JPG, JPG to PDF, PDF to Word, Word to PDF, Merge PDF, Image Resizer, 300x300 resizer, PDF compressor, URL Shortener, QR Code Generator, Tool Pulse">
     <meta name="author" content="Tool Pulse">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="Bengali, English">
-    <meta name="revisit-after" content="2 days">
-    <meta name="google-site-verification" content="Yrzv35hpzGMBk2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="google-site-verification" content="Yrzv35hpzGMBK2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
 
-    <!-- Favicon (SEO & Branding Fix) -->
-    <link rel="icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico" type="image/x-icon">
-
-    <!-- Canonical URL -->
+    <!-- 2. Canonical & Alternative Links -->
     <link rel="canonical" href="https://myparsonalmail001-gif.github.io/Toolpulse/">
 
-    <!-- Open Graph / Facebook / LinkedIn Meta Tags -->
+    <!-- 3. Favicon & Branding Icons -->
+    <link rel="icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico">
+
+    <!-- 4. Open Graph / Facebook / LinkedIn Meta Tags -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tool Pulse">
+    <meta property="og:locale" content="bn_BD">
     <meta property="og:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
     <meta property="og:title" content="Tool Pulse - Free Online Utility & File Tools">
-    <meta property="og:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse.">
+    <meta property="og:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse. Fast, free & client-side secure.">
     <meta property="og:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Tool Pulse Online File Converter Banner">
 
-    <!-- Twitter Card Meta Tags -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
-    <meta property="twitter:title" content="Tool Pulse - Free Online Utility & File Tools">
-    <meta property="twitter:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse.">
-    <meta property="twitter:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
+    <!-- 5. Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
+    <meta name="twitter:title" content="Tool Pulse - Free Online Utility & File Tools">
+    <meta name="twitter:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tool Pulse. Fast, free & client-side secure.">
+    <meta name="twitter:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
 
-    <!-- Tailwind CSS & FontAwesome -->
+    <!-- 6. Performance & Speed Optimization (Resource Hints) -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
+    <!-- Stylesheets & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
-    <!-- PDF, QR & Conversion Libraries (Added defer for performance & SEO) -->
+    <!-- PDF, QR & Conversion Libraries -->
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -61,7 +74,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
-    <!-- Schema.org JSON-LD Structured Data -->
+    <!-- 7. Advanced Schema.org JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -72,7 +85,16 @@
           "url": "https://myparsonalmail001-gif.github.io/Toolpulse/",
           "name": "Tool Pulse",
           "description": "Free Online File Converters and Utility Tools",
-          "inLanguage": "bn"
+          "inLanguage": "bn-BD",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tool Pulse",
+            "url": "https://myparsonalmail001-gif.github.io/Toolpulse/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico"
+            }
+          }
         },
         {
           "@type": "WebApplication",
@@ -89,7 +111,20 @@
           }
         },
         {
+          "@type": "BreadcrumbList",
+          "@id": "https://myparsonalmail001-gif.github.io/Toolpulse/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://myparsonalmail001-gif.github.io/Toolpulse/"
+            }
+          ]
+        },
+        {
           "@type": "FAQPage",
+          "@id": "https://myparsonalmail001-gif.github.io/Toolpulse/#faq",
           "mainEntity": [
             {
               "@type": "Question",
@@ -106,6 +141,14 @@
                 "@type": "Answer",
                 "text": "আমাদের 10 KB to 950 KB Converter টুল ব্যবহার করে সহজেই PDF এবং ছবির সাইজ কোয়ালিটি ঠিক রেখে কমপ্রেস করতে পারবেন।"
               }
+            },
+            {
+              "@type": "Question",
+              "name": "Tool Pulse এ আপলোড করা ফাইলের সিকিউরিটি কেমন?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tool Pulse সম্পূর্ণ ক্লায়েন্ট-সাইড প্রযুক্তিতে কাজ করে, যার ফলে আপনার ফাইল আমাদের সার্ভারে সেভ হয় না এবং ১০০% নিরাপদ থাকে।"
+              }
             }
           ]
         }
@@ -121,8 +164,8 @@
             
             <!-- Brand & Top Horizontal Bar -->
             <nav class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pr-4 text-xs md:text-sm font-medium no-scrollbar" aria-label="Main Navigation">
-                <a href="#" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white" title="Tool Pulse Home">
-                    <i class="fa-solid fa-bolt text-yellow-300"></i> Tool Pulse
+                <a href="https://myparsonalmail001-gif.github.io/Toolpulse/" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white" title="Tool Pulse Home">
+                    <i class="fa-solid fa-bolt text-yellow-300" aria-hidden="true"></i> Tool Pulse
                 </a>
                 <button type="button" onclick="switchTool('pdf-jpg')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to JPG</button>
                 <button type="button" onclick="switchTool('jpg-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">JPG to PDF</button>
@@ -147,7 +190,7 @@
                 </div>
 
                 <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-white text-2xl px-2 focus:outline-none">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -171,12 +214,10 @@
     <div class="container mx-auto p-4 flex-grow grid grid-cols-1 md:grid-cols-4 gap-4">
         
         <!-- Sidebar Ads (Left side - 2 Ads) -->
-        <aside class="md:col-span-1 space-y-4">
-            <!-- Ad Space 1 -->
+        <aside class="md:col-span-1 space-y-4" aria-label="Sidebar Advertisements">
             <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-48 flex items-center justify-center text-slate-400 font-bold text-sm">
                 Ad Space 1 (Sidebar Top)
             </div>
-            <!-- Ad Space 2 -->
             <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-64 flex items-center justify-center text-slate-400 font-bold text-sm">
                 Ad Space 2 (Sidebar Bottom)
             </div>
@@ -214,8 +255,8 @@
                 <i class="fa-solid fa-download"></i> Merge & Download PDF
             </button>
 
-            <!-- Bottom Horizontal Ad (Ad Space 3 - Slim Banner) -->
-            <div class="w-full mt-6 bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-20 flex items-center justify-center text-slate-400 font-bold text-sm">
+            <!-- Bottom Horizontal Ad Banner -->
+            <div class="w-full mt-6 bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-20 flex items-center justify-center text-slate-400 font-bold text-sm" aria-label="Advertisement Banner">
                 Ad Space 3 (Bottom Horizontal Banner)
             </div>
 
@@ -223,36 +264,40 @@
     </div>
 
     <!-- SEO Content Section -->
-    <section class="bg-white border-t border-slate-200 mt-8 py-8">
+    <section class="bg-white border-t border-slate-200 mt-8 py-8" aria-labelledby="seoHeading">
         <div class="container mx-auto px-4 max-w-5xl">
-            <!-- Fixed H1 for clear SEO Hierarchy -->
-            <h1 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tool Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h1>
+            <!-- Main H1 Heading -->
+            <h1 id="seoHeading" class="text-2xl font-bold text-slate-800 mb-4 text-center">Tool Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h1>
             <p class="text-slate-600 text-sm leading-relaxed mb-6 text-center">
                 Tool Pulse হল একটি ফ্রি অনলাইন টুল প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর ও কমপ্রেস করতে পারবেন। আমাদের সার্ভিস সম্পূর্ণ নিরাপদ এবং কোনো ফাইল সার্ভারে সেভ রাখা হয় না।
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
                 <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <h3 class="font-bold text-cyan-800 mb-2">⚡ ফ্রি PDF ও ইমেজ কনভার্টার</h3>
+                    <h2 class="font-bold text-cyan-800 text-base mb-2">⚡ ফ্রি PDF ও ইমেজ কনভার্টার</h2>
                     <p class="text-slate-600">PDF to JPG, JPG to PDF, PDF to Word, Word to PDF এর মতো দরকারি কাজগুলো এক ক্লিকেই করতে পারবেন।</p>
                 </div>
                 <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <h3 class="font-bold text-cyan-800 mb-2">📐 ফাইল কমপ্রেসর ও রেজোলিউশন টুল</h3>
+                    <h2 class="font-bold text-cyan-800 text-base mb-2">📐 ফাইল কমপ্রেসর ও রেজোলিউশন টুল</h2>
                     <p class="text-slate-600">ছবি ৩০০x৩০০ পিক্সেলে রিসাইজ করুন অথবা ১০ KB থেকে ৯৫০ KB এর ভেতরে PDF এবং ছবি কমপ্রেস করে সাইজ কমিয়ে নিন।</p>
                 </div>
             </div>
 
-            <!-- FAQ Section -->
+            <!-- FAQ Section with Schema Consistency -->
             <div class="mt-8">
-                <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">সাধারণ জিজ্ঞাসিত প্রশ্নাবলী (FAQ)</h3>
+                <h2 class="text-xl font-bold text-slate-800 mb-4 text-center">সাধারণ জিজ্ঞাসিত প্রশ্নাবলী (FAQ)</h2>
                 <div class="space-y-4 text-sm">
                     <div class="p-4 border rounded-lg bg-slate-50">
-                        <h4 class="font-semibold text-slate-700">প্রশ্ন: Tool Pulse কি সম্পূর্ণ ফ্রি?</h4>
+                        <h3 class="font-semibold text-slate-700 text-base">প্রশ্ন: Tool Pulse কি সম্পূর্ণ ফ্রি?</h3>
                         <p class="text-slate-600 mt-1">উত্তর: হ্যাঁ, টুলগুলো সম্পূর্ণ বিনামূল্যে ব্যবহার করা যায়।</p>
                     </div>
                     <div class="p-4 border rounded-lg bg-slate-50">
-                        <h4 class="font-semibold text-slate-700">প্রশ্ন: আমার আপলোড করা ফাইলের নিরাপত্তা কেমন?</h4>
+                        <h3 class="font-semibold text-slate-700 text-base">প্রশ্ন: আমার আপলোড করা ফাইলের নিরাপত্তা কেমন?</h3>
                         <p class="text-slate-600 mt-1">উত্তর: Tool Pulse সরাসরি ক্লায়েন্ট সাইড বা আপনার ব্রাউজারেই কাজ সম্পন্ন করে, ফলে আপনার ফাইল নিরাপদে থাকে।</p>
+                    </div>
+                    <div class="p-4 border rounded-lg bg-slate-50">
+                        <h3 class="font-semibold text-slate-700 text-base">প্রশ্ন: Tool Pulse এ ফাইল সাইজ কিভাবে কমাবো?</h3>
+                        <p class="text-slate-600 mt-1">উত্তর: আমাদের 10 KB to 950 KB Converter টুল ব্যবহার করে সহজেই PDF এবং ছবির সাইজ কোয়ালিটি ঠিক রেখে কমপ্রেস করতে পারবেন।</p>
                     </div>
                 </div>
             </div>
