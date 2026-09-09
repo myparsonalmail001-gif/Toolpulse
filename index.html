@@ -766,15 +766,27 @@
         async function executePDFMerge() {
             if (selectedFiles.length < 2) return alert("অন্তত ২টি ফাইল দরকার!");
             showStatus("PDF জোড়া দেওয়া হচ্ছে...");
-            const { PDFDocument } = PDFLib;
-            const mergedPdf = await PDFDocument.create();
-            for (let f of selectedFiles) {
-                const pdf = await PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: true });
-                const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                pages.forEach(p => mergedPdf.addPage(p));
+            try {
+                const { PDFDocument } = PDFLib;
+                const mergedPdf = await PDFDocument.create();
+
+                for (let f of selectedFiles) {
+                    const arrayBuffer = await f.arrayBuffer();
+                    const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => {
+                        mergedPdf.addPage(page);
+                    });
+                }
+
+                const mergedPdfBytes = await mergedPdf.save();
+                downloadBlob(mergedPdfBytes, "Merged.pdf", "application/pdf");
+                showStatus("PDF Merge সম্পন্ন!", true);
+            } catch (e) {
+                console.error(e);
+                alert("PDF ফাইল জোড়া দিতে সমস্যা হয়েছে! ফাইলগুলো ক্ষতিগ্রস্ত বা অতিরিক্ত সুরক্ষিত কিনা যাচাই করুন।");
+                showStatus("PDF Merge ব্যর্থ হয়েছে।", false);
             }
-            downloadBlob(await mergedPdf.save(), "Merged.pdf", "application/pdf");
-            showStatus("PDF Merge সম্পন্ন!", true);
         }
 
         function executeImageResizer300(file) {
