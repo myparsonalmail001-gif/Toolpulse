@@ -16,20 +16,20 @@
     <meta name="google-site-verification" content="Yrzv35hpzGMBK2XOrDHbv6zo-1uhGAfpSlvaGhTH-2A" />
 
     <!-- Canonical & Alternative Links -->
-    <link rel="canonical" href="https://myparsonalmail001-gif.github.io/Toolpulse/">
+    <link rel="canonical" href="https://toolspulse.net/">
 
     <!-- Favicon & Branding Icons -->
-    <link rel="icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="https://myparsonalmail001-gif.github.io/Toolpulse/assets/favicon.ico">
+    <link rel="icon" href="https://toolspulse.net/assets/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://toolspulse.net/assets/favicon.ico">
 
     <!-- Open Graph / Facebook / LinkedIn Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Tools Pulse">
     <meta property="og:locale" content="bn_BD">
-    <meta property="og:url" content="https://myparsonalmail001-gif.github.io/Toolpulse/">
+    <meta property="og:url" content="https://toolspulse.net/">
     <meta property="og:title" content="Tools Pulse - Free Online Utility & File Tools">
     <meta property="og:description" content="Convert PDF to JPG, Word to PDF, Merge PDF, Lock PDF, Add Watermark, Compress Files, Generate QR Codes, and Shorten URLs instantly with Tools Pulse.">
-    <meta property="og:image" content="https://myparsonalmail001-gif.github.io/Toolpulse/assets/og-image.jpg">
+    <meta property="og:image" content="https://toolspulse.net/assets/og-image.jpg">
 
     <!-- Performance & Speed Optimization -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
@@ -49,19 +49,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
+        /* Modern Blue & White Landing Page Theme Styling */
         .bg-theme-gradient { 
-            background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%); 
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); 
         }
         .btn-gradient { 
-            background: linear-gradient(135deg, #0284c7 0%, #059669 100%); 
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%); 
         }
         .btn-gradient:hover { 
-            background: linear-gradient(135deg, #0369a1 0%, #047857 100%); 
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); 
+        }
+        .hero-bg-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 64, 175, 0.3) 100%);
+            border-bottom-left-radius: 50% 100%;
+            z-index: 0;
+            pointer-events: none;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Ball Bounce / Rolling Animation for Global Progress Bar */
         @keyframes rollBall {
             0% { left: 0%; transform: rotate(0deg); }
             50% { left: calc(100% - 24px); transform: rotate(360deg); }
@@ -72,168 +83,163 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans relative overflow-x-hidden">
+
+    <!-- Background Decorative Shape matching the uploaded design layout -->
+    <div class="hero-bg-shape"></div>
 
     <!-- Global Processing Overlay / Loader -->
     <div id="globalLoader" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] hidden flex-col items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center space-y-4">
             <h3 class="text-lg font-bold text-slate-800">Processing Your Request</h3>
             
-            <!-- Progress Track Container -->
             <div class="relative w-full bg-slate-200 h-6 rounded-full overflow-hidden p-1 shadow-inner flex items-center">
-                <!-- Progress Fill -->
-                <div id="progressBarFill" class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-full rounded-full transition-all duration-200 w-0"></div>
+                <div id="progressBarFill" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-200 w-0"></div>
                 
-                <!-- Bouncing Football -->
                 <div id="loaderBall" class="absolute top-1/2 -translate-y-1/2 text-lg text-slate-800 leading-none transition-all duration-100 left-1">
-                    <i class="fa-solid fa-futbol text-emerald-600 animate-spin"></i>
+                    <i class="fa-solid fa-futbol text-blue-600 animate-spin"></i>
                 </div>
 
-                <!-- Percentage Text -->
                 <span id="progressPercent" class="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-700 drop-shadow">0%</span>
             </div>
 
-            <p class="text-sm font-semibold text-cyan-700 animate-pulse">Creating, please wait...</p>
+            <p class="text-sm font-semibold text-blue-700 animate-pulse">Creating, please wait...</p>
         </div>
     </div>
 
     <!-- Header Navigation -->
-    <header class="bg-theme-gradient text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+        <div class="container mx-auto px-4 py-3.5 flex justify-between items-center">
             
-            <!-- Brand & Navigation List -->
-            <nav class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pr-4 text-xs md:text-sm font-medium no-scrollbar" aria-label="Main Navigation">
-                <a href="https://myparsonalmail001-gif.github.io/Toolpulse/" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white" title="Tools Pulse Home">
-                    <i class="fa-solid fa-bolt text-yellow-300"></i> Tools Pulse
-                </a>
-                <!-- Existing 10 Tools (Order Retained) -->
-                <button type="button" onclick="switchTool('pdf-jpg')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to JPG</button>
-                <button type="button" onclick="switchTool('jpg-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">JPG to PDF</button>
-                <button type="button" onclick="switchTool('pdf-word')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to Word</button>
-                <button type="button" onclick="switchTool('word-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Word to PDF</button>
-                <button type="button" onclick="switchTool('word-excel')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Word to Excel</button>
-                <button type="button" onclick="switchTool('merge-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Merger PDF</button>
-                <button type="button" onclick="switchTool('resizer')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Image Resizer</button>
-                <button type="button" onclick="switchTool('url-short')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">URL Shortener</button>
-                <button type="button" onclick="switchTool('qr-gen')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">QR Code</button>
-                <button type="button" onclick="switchTool('resize-kb')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">10 KB to 950 KB Converter</button>
+            <!-- Brand Logo -->
+            <a href="https://toolspulse.net/" class="text-xl font-extrabold flex items-center gap-2 text-blue-700" title="Tools Pulse Home">
+                <i class="fa-solid fa-bolt text-yellow-500"></i> ToolsPulse
+            </a>
 
-                <!-- New 6 Tools (Appended Below/After) -->
-                <button type="button" onclick="switchTool('remove-pages')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">PDF Page Remover</button>
-                <button type="button" onclick="switchTool('add-page-num')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">Add Page Numbers</button>
-                <button type="button" onclick="switchTool('add-watermark')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">Add Watermark</button>
-                <button type="button" onclick="switchTool('lock-pdf')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">Lock PDF</button>
-                <button type="button" onclick="switchTool('bg-remove')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">Background Remover</button>
-                <button type="button" onclick="switchTool('passport-photo')" class="bg-emerald-700/60 hover:bg-emerald-700 px-3 py-1.5 rounded-full transition">Passport Photo Maker</button>
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+                <a href="#home" onclick="switchTool('merge-pdf')" class="hover:text-blue-600 transition">Home</a>
+                <a href="#tools-section" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="hover:text-blue-600 transition flex items-center gap-1">Tools <i class="fa-solid fa-angle-down text-xs"></i></a>
+                <a href="#" class="hover:text-blue-600 transition">Features</a>
+                <a href="#" class="hover:text-blue-600 transition">Pricing</a>
+                <a href="#" class="hover:text-blue-600 transition">Blog</a>
             </nav>
 
-            <!-- Live Counter & Dropdown Trigger -->
+            <!-- Right Action & Mobile Menu -->
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-1.5 bg-black/20 text-white px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                <div class="hidden sm:flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
                     <span class="relative flex h-2 w-2">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    Live Visitors: <span id="visitorCount" class="text-yellow-300 font-bold">10,248</span>
+                    Live Visitors: <span id="visitorCount" class="font-bold">10,248</span>
                 </div>
 
-                <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-white text-2xl px-2 focus:outline-none">
+                <a href="#workBox" onclick="switchTool('merge-pdf')" class="btn-gradient text-white text-xs md:text-sm font-bold px-4 py-2 rounded-full shadow-md transition">
+                    Download / Get Started
+                </a>
+
+                <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-slate-700 text-2xl px-2 focus:outline-none md:hidden">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Dropdown Menu (All 16 Tools) -->
-    <div id="dropdownMenu" class="hidden bg-white border-b shadow-lg px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-        <!-- Existing 10 -->
-        <button type="button" onclick="switchTool('pdf-jpg')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-pdf"></i> PDF to JPG</button>
-        <button type="button" onclick="switchTool('jpg-pdf')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-image"></i> JPG to PDF</button>
-        <button type="button" onclick="switchTool('pdf-word')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-word"></i> PDF to Word</button>
-        <button type="button" onclick="switchTool('word-pdf')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-lines"></i> Word to PDF</button>
-        <button type="button" onclick="switchTool('word-excel')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-excel"></i> Word to Excel</button>
-        <button type="button" onclick="switchTool('merge-pdf')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-code-merge"></i> Merger PDF</button>
-        <button type="button" onclick="switchTool('resizer')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-crop-simple"></i> Image Resizer</button>
-        <button type="button" onclick="switchTool('url-short')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-link"></i> URL Shortener</button>
-        <button type="button" onclick="switchTool('qr-gen')" class="text-left text-cyan-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-qrcode"></i> QR Code Generator</button>
-        <button type="button" onclick="switchTool('resize-kb')" class="text-left text-emerald-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-compress"></i> 10 KB to 950 KB Converter</button>
+    <!-- Dropdown / All Tools Menu -->
+    <div id="dropdownMenu" class="hidden bg-white border-b shadow-lg px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm z-40 relative">
+        <button type="button" onclick="switchTool('pdf-jpg')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-pdf"></i> PDF to JPG</button>
+        <button type="button" onclick="switchTool('jpg-pdf')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-image"></i> JPG to PDF</button>
+        <button type="button" onclick="switchTool('pdf-word')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-word"></i> PDF to Word</button>
+        <button type="button" onclick="switchTool('word-pdf')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-lines"></i> Word to PDF</button>
+        <button type="button" onclick="switchTool('word-excel')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-excel"></i> Word to Excel</button>
+        <button type="button" onclick="switchTool('merge-pdf')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-code-merge"></i> Merger PDF</button>
+        <button type="button" onclick="switchTool('resizer')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-crop-simple"></i> Image Resizer</button>
+        <button type="button" onclick="switchTool('url-short')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-link"></i> URL Shortener</button>
+        <button type="button" onclick="switchTool('qr-gen')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-qrcode"></i> QR Code Generator</button>
+        <button type="button" onclick="switchTool('resize-kb')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-compress"></i> 10 KB to 950 KB Converter</button>
         
-        <!-- New 6 -->
-        <button type="button" onclick="switchTool('remove-pages')" class="text-left text-cyan-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-trash-can"></i> PDF Page Remover</button>
-        <button type="button" onclick="switchTool('add-page-num')" class="text-left text-emerald-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Add Page Numbers</button>
-        <button type="button" onclick="switchTool('add-watermark')" class="text-left text-cyan-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-stamp"></i> Add Watermark</button>
-        <button type="button" onclick="switchTool('lock-pdf')" class="text-left text-emerald-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-lock"></i> Lock PDF</button>
-        <button type="button" onclick="switchTool('bg-remove')" class="text-left text-cyan-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Background Remover</button>
-        <button type="button" onclick="switchTool('passport-photo')" class="text-left text-emerald-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> Passport Photo Maker</button>
+        <button type="button" onclick="switchTool('remove-pages')" class="text-left text-blue-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-trash-can"></i> PDF Page Remover</button>
+        <button type="button" onclick="switchTool('add-page-num')" class="text-left text-indigo-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Add Page Numbers</button>
+        <button type="button" onclick="switchTool('add-watermark')" class="text-left text-blue-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-stamp"></i> Add Watermark</button>
+        <button type="button" onclick="switchTool('lock-pdf')" class="text-left text-indigo-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-lock"></i> Lock PDF</button>
+        <button type="button" onclick="switchTool('bg-remove')" class="text-left text-blue-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Background Remover</button>
+        <button type="button" onclick="switchTool('passport-photo')" class="text-left text-indigo-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> Passport Photo Maker</button>
     </div>
 
-    <!-- Main Workspace -->
-    <div class="container mx-auto p-4 flex-grow grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Main Workspace Section (Matching the Reference Screenshot Layout) -->
+    <section id="home" class="container mx-auto px-4 py-8 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
         
-        <!-- Sidebar Ads -->
-        <aside class="md:col-span-1 space-y-4" aria-label="Sidebar Advertisements">
-            <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-48 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 1 (Sidebar Top)
+        <!-- Left Hero Details -->
+        <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                SIMPLEST WAY <br>TO BUILD TOOLS
+            </h1>
+            <p class="text-slate-600 text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+                ToolsPulse provides professional free online utility tools including PDF converters, image resizers, password protection, passport photo makers, and instant file compressors securely in your browser.
+            </p>
+            <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                <a href="#workBox" class="btn-gradient text-white font-bold py-3.5 px-8 rounded-xl shadow-lg transition text-base flex items-center gap-2">
+                    Get Started Now <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <button type="button" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold py-3.5 px-6 rounded-xl shadow-sm transition text-base">
+                    Explore Tools
+                </button>
             </div>
-            <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-64 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 2 (Sidebar Bottom)
-            </div>
-        </aside>
+        </div>
 
-        <!-- Dynamic Work Area -->
-        <main class="md:col-span-3 bg-white border border-slate-200 shadow-sm rounded-2xl p-6 flex flex-col items-center justify-between min-h-[460px]">
-            
-            <h2 id="toolTitle" class="text-xl md:text-2xl font-bold text-cyan-800 border-b-2 border-emerald-400 pb-2 mb-4 w-full text-center">
-                PDF Merger Tool
-            </h2>
-
-            <div id="workBox" class="w-full flex-grow flex flex-col items-center justify-center p-6 my-2 border-2 border-dashed border-cyan-300 bg-cyan-50/40 rounded-xl text-center">
-                <div class="w-20 h-20 bg-theme-gradient text-white rounded-full flex items-center justify-center text-3xl shadow-md mb-3">
-                    <i id="workBoxIcon" class="fa-solid fa-code-merge"></i>
-                </div>
+        <!-- Right Interactive Dynamic Tool Work Area -->
+        <div class="lg:col-span-6">
+            <div class="bg-white border border-slate-200 shadow-xl rounded-3xl p-6 md:p-8 flex flex-col items-center justify-between min-h-[460px] relative">
                 
-                <p id="workBoxText" class="text-slate-600 font-medium mb-4">একাধিক PDF ফাইল নির্বাচন করুন</p>
-                
-                <!-- Dynamic Input Container -->
-                <div id="inputContainer" class="w-full max-w-md">
-                    <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
-                    <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
-                        Choose File
-                    </button>
+                <h2 id="toolTitle" class="text-xl md:text-2xl font-bold text-blue-900 border-b-2 border-blue-500 pb-2 mb-4 w-full text-center">
+                    PDF Merger Tool
+                </h2>
+
+                <div id="workBox" class="w-full flex-grow flex flex-col items-center justify-center p-6 my-2 border-2 border-dashed border-blue-300 bg-blue-50/40 rounded-2xl text-center">
+                    <div class="w-16 h-16 bg-theme-gradient text-white rounded-full flex items-center justify-center text-2xl shadow-md mb-3">
+                        <i id="workBoxIcon" class="fa-solid fa-code-merge"></i>
+                    </div>
+                    
+                    <p id="workBoxText" class="text-slate-600 font-medium mb-4">একাধিক PDF ফাইল নির্বাচন করুন</p>
+                    
+                    <!-- Dynamic Input Container -->
+                    <div id="inputContainer" class="w-full max-w-md">
+                        <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
+                        <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <div id="statusMessage" class="mt-3 text-xs font-semibold text-blue-600 hidden"></div>
+                    <div id="previewArea" class="mt-4 hidden w-full flex flex-col items-center justify-center text-sm text-slate-700"></div>
+                    <div id="qrContainer" class="mt-4 flex flex-col items-center gap-3"></div>
                 </div>
 
-                <div id="statusMessage" class="mt-3 text-xs font-semibold text-emerald-600 hidden"></div>
-                <div id="previewArea" class="mt-4 hidden w-full flex flex-col items-center justify-center text-sm text-slate-700"></div>
-                <div id="qrContainer" class="mt-4 flex flex-col items-center gap-3"></div>
+                <!-- Action Button -->
+                <button id="mainActionBtn" type="button" onclick="processCurrentTool()" class="w-full btn-gradient text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base md:text-lg flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-download"></i> Merge & Download PDF
+                </button>
+
             </div>
+        </div>
 
-            <!-- Action Button -->
-            <button id="mainActionBtn" type="button" onclick="processCurrentTool()" class="w-full md:w-2/3 btn-gradient text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base md:text-lg flex items-center justify-center gap-2 mt-2">
-                <i class="fa-solid fa-download"></i> Merge & Download PDF
-            </button>
+    </section>
 
-            <!-- Bottom Ad Banner -->
-            <div class="w-full mt-6 bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-20 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 3 (Bottom Horizontal Banner)
-            </div>
-
-        </main>
-    </div>
-
-    <!-- SEO Content Section -->
-    <section class="bg-white border-t border-slate-200 mt-8 py-8">
-        <div class="container mx-auto px-4 max-w-5xl">
-            <h1 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tools Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h1>
-            <p class="text-slate-600 text-sm leading-relaxed mb-6 text-center">
-                Tools Pulse হল একটি ফ্রি অনলাইন টুল প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর, কমপ্রেস, পাসওয়ার্ড প্রটেক্ট, ওয়াটারমার্ক এবং পাসপোর্ট ফটো তৈরি করতে পারবেন।
+    <!-- SEO & Info Section -->
+    <section class="bg-white border-t border-slate-200 mt-12 py-10 relative z-10">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">ToolsPulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h2>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                ToolsPulse হল একটি সম্পূর্ণ ফ্রি অনলাইন প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর, কমপ্রেস, পাসওয়ার্ড প্রটেক্ট, ওয়াটারমার্ক এবং পাসপোর্ট ফটো তৈরি করতে পারবেন। সম্পূর্ণ সুরক্ষিত এবং দ্রুত ক্লায়েন্ট-সাইড প্রসেসিং।
             </p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800 relative z-10">
         <div class="container mx-auto px-4">
-            <p>&copy; 2026 Tools Pulse. All rights reserved.</p>
+            <p>&copy; 2026 ToolsPulse. All rights reserved.</p>
         </div>
     </footer>
 
@@ -247,6 +253,7 @@
 
         let currentTool = 'merge-pdf';
         let selectedFiles = [];
+        let pagesToRemoveList = [];
 
         // Live Visitor Counter
         let count = parseInt(localStorage.getItem('visitor_count')) || 10248;
@@ -259,7 +266,7 @@
             updateVisitorCount();
         }, 4000);
 
-        // Global Progress Bar Controller with Rolling Football
+        // Global Progress Bar Controller
         async function runGlobalLoader(workCallback) {
             const loader = document.getElementById('globalLoader');
             const fill = document.getElementById('progressBarFill');
@@ -301,7 +308,6 @@
             }
         }
 
-        // Resizer Option Switcher (300x300 vs Custom)
         function toggleResizerMode(mode) {
             const presetBox = document.getElementById('resizerPresetBox');
             const customBox = document.getElementById('resizerCustomBox');
@@ -314,10 +320,10 @@
             }
         }
 
-        // Tool Switcher Logic
         function switchTool(toolKey) {
             currentTool = toolKey;
             selectedFiles = [];
+            pagesToRemoveList = [];
             
             const titleEl = document.getElementById('toolTitle');
             const iconEl = document.getElementById('workBoxIcon');
@@ -333,18 +339,17 @@
             previewArea.innerHTML = '';
             qrContainer.innerHTML = '';
 
-            // Tool Specific Views
             if (toolKey === 'url-short') {
                 titleEl.innerText = "URL Shortener";
                 iconEl.className = "fa-solid fa-link";
                 textEl.innerText = "আপনার দীর্ঘ লিঙ্কটি নিচে লিখুন";
-                inputContainer.innerHTML = `<input type="url" id="textInput" placeholder="https://example.com/long-url" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm">`;
+                inputContainer.innerHTML = `<input type="url" id="textInput" placeholder="https://example.com/long-url" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">`;
                 actionBtn.innerHTML = `<i class="fa-solid fa-link"></i> Shorten URL`;
             } else if (toolKey === 'qr-gen') {
                 titleEl.innerText = "QR Code Generator";
                 iconEl.className = "fa-solid fa-qrcode";
                 textEl.innerText = "টেক্সট বা লিঙ্ক দিয়ে QR Code তৈরি করুন";
-                inputContainer.innerHTML = `<input type="text" id="textInput" placeholder="আপনার লিঙ্ক বা লেখা লিখুন..." class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 text-sm">`;
+                inputContainer.innerHTML = `<input type="text" id="textInput" placeholder="আপনার লিঙ্ক বা লেখা লিখুন..." class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">`;
                 actionBtn.innerHTML = `<i class="fa-solid fa-qrcode"></i> Generate QR Code`;
             } else if (toolKey === 'resizer') {
                 titleEl.innerText = "Image Resizer";
@@ -353,7 +358,7 @@
                 inputContainer.innerHTML = `
                     <div class="space-y-3">
                         <div class="flex justify-center gap-2 mb-2">
-                            <button type="button" onclick="toggleResizerMode('preset')" class="px-3 py-1 bg-cyan-600 text-white rounded text-xs font-bold">300x300 Default</button>
+                            <button type="button" onclick="toggleResizerMode('preset')" class="px-3 py-1 bg-blue-600 text-white rounded text-xs font-bold">300x300 Default</button>
                             <button type="button" onclick="toggleResizerMode('custom')" class="px-3 py-1 bg-slate-600 text-white rounded text-xs font-bold">Custom Resize</button>
                         </div>
                         <div id="resizerPresetBox" class="text-xs font-semibold text-slate-500">
@@ -370,29 +375,28 @@
                             </div>
                         </div>
                         <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
                     </div>
                 `;
                 actionBtn.innerHTML = `<i class="fa-solid fa-download"></i> Resize & Download`;
             } else if (toolKey === 'remove-pages') {
                 titleEl.innerText = "PDF Page Remover";
                 iconEl.className = "fa-solid fa-trash-can";
-                textEl.innerText = "PDF ফাইল আপলোড করে বাদ দেওয়ার পেজ নম্বর দিন";
+                textEl.innerText = "PDF ফাইল আপলোড করুন, পেজগুলোতে ক্রস (X) এ ক্লিক করে পেজ বাদ দিন";
                 inputContainer.innerHTML = `
                     <div class="space-y-2">
-                        <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
-                        <input type="text" id="pagesToRemove" placeholder="রিমুভ পেজ নং (যেমন: 1, 3, 5)" class="w-full px-3 py-1.5 border rounded-lg text-xs">
+                        <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="handlePDFPreviewForRemoval(event)">
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
                     </div>
                 `;
-                actionBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Remove Pages & Download`;
+                actionBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Remove Selected Pages & Download`;
             } else if (toolKey === 'add-page-num') {
                 titleEl.innerText = "Add Page Numbers to PDF";
                 iconEl.className = "fa-solid fa-list-ol";
                 textEl.innerText = "PDF নির্বাচন করুন, সব পেজে স্বয়ংক্রিয় পেজ নম্বর যুক্ত হবে";
                 inputContainer.innerHTML = `
                     <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="handleFileSelect(event)">
-                    <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
                 `;
                 actionBtn.innerHTML = `<i class="fa-solid fa-list-ol"></i> Add Numbers & Download`;
             } else if (toolKey === 'add-watermark') {
@@ -402,7 +406,7 @@
                 inputContainer.innerHTML = `
                     <div class="space-y-2">
                         <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
                         <input type="text" id="watermarkText" placeholder="Your Brand Name" class="w-full px-3 py-1.5 border rounded-lg text-xs font-semibold">
                     </div>
                 `;
@@ -414,7 +418,7 @@
                 inputContainer.innerHTML = `
                     <div class="space-y-2">
                         <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose PDF File</button>
                         <input type="password" id="pdfPassword" placeholder="Enter Password (e.g. Pass123!)" class="w-full px-3 py-1.5 border rounded-lg text-xs font-semibold">
                     </div>
                 `;
@@ -422,10 +426,10 @@
             } else if (toolKey === 'bg-remove') {
                 titleEl.innerText = "Background Remover";
                 iconEl.className = "fa-solid fa-wand-magic-sparkles";
-                textEl.innerText = "ছবি নির্বাচন করুন (স্বয়ংক্রিয় ব্যাকগ্রাউন্ড রিমুভ হবে)";
+                textEl.innerText = "ছবি নির্বাচন করুন (নিখুঁত প্রান্ত সহ ব্যাকগ্রাউন্ড রিমুভ হবে)";
                 inputContainer.innerHTML = `
                     <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
-                    <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
                 `;
                 actionBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Remove BG & Download`;
             } else if (toolKey === 'passport-photo') {
@@ -435,10 +439,10 @@
                 inputContainer.innerHTML = `
                     <div class="space-y-2">
                         <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Choose Image</button>
                         <div class="flex items-center justify-between bg-white p-2 border rounded-lg">
                             <label class="text-xs font-semibold text-slate-600">Background Color:</label>
-                            <input type="color" id="passportBgColor" value="#0000FF" class="w-8 h-8 rounded border-none cursor-pointer">
+                            <input type="color" id="passportBgColor" value="#ffffff" class="w-8 h-8 rounded border-none cursor-pointer">
                         </div>
                     </div>
                 `;
@@ -452,25 +456,23 @@
                         <div class="bg-white p-3 rounded-lg border border-slate-200 text-left">
                             <div class="flex justify-between items-center mb-1">
                                 <label class="text-xs font-semibold text-slate-600">টার্গেট সাইজ:</label>
-                                <span id="sliderVal" class="text-xs font-bold text-cyan-600">100 KB</span>
+                                <span id="sliderVal" class="text-xs font-bold text-blue-600">100 KB</span>
                             </div>
-                            <input type="range" id="kbSlider" min="10" max="950" value="100" class="w-full accent-cyan-600" oninput="document.getElementById('sliderVal').innerText = this.value + ' KB'">
+                            <input type="range" id="kbSlider" min="10" max="950" value="100" class="w-full accent-blue-600" oninput="document.getElementById('sliderVal').innerText = this.value + ' KB'">
                         </div>
                         <input type="file" id="fileInput" class="hidden" multiple accept="application/pdf, image/*" onchange="handleFileSelect(event)">
-                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-cyan-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold">Choose Files (Max 10)</button>
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold">Choose Files (Max 10)</button>
                     </div>
                 `;
                 actionBtn.innerHTML = `<i class="fa-solid fa-download"></i> Compress & Download`;
             } else {
-                // Default Standard Tools Layout
                 inputContainer.innerHTML = `
                     <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
-                    <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
+                    <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
                         Choose File
                     </button>
                 `;
                 const fileInput = document.getElementById('fileInput');
-                const selectBtn = document.getElementById('selectBtn');
 
                 switch(toolKey) {
                     case 'pdf-jpg':
@@ -516,7 +518,6 @@
             document.getElementById('dropdownMenu').classList.add('hidden');
         }
 
-        // File Selection Handler
         function handleFileSelect(event) {
             selectedFiles = Array.from(event.target.files);
             const previewArea = document.getElementById('previewArea');
@@ -533,468 +534,32 @@
             } else {
                 const file = selectedFiles[0];
                 previewArea.innerHTML = `
-                    <div class="bg-cyan-50 border border-cyan-200 p-3 rounded-lg text-center">
+                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
                         <p class="font-semibold text-slate-700">ফাইল: ${file.name}</p>
-                        <p class="text-xs text-slate-500 mt-1">সাইজ: <span class="font-bold text-cyan-600">${(file.size / 1024).toFixed(1)} KB</span></p>
+                        <p class="text-xs text-slate-500 mt-1">সাইজ: <span class="font-bold text-blue-600">${(file.size / 1024).toFixed(1)} KB</span></p>
                     </div>
                 `;
             }
         }
 
-        // Action Router
-        async function processCurrentTool() {
-            if (currentTool === 'url-short') {
-                executeURLShortener();
-                return;
-            }
-            if (currentTool === 'qr-gen') {
-                executeQRGenerator();
-                return;
-            }
+        // PDF Page Remover Preview with Cross (X) Button over each page
+        async function handlePDFPreviewForRemoval(event) {
+            selectedFiles = Array.from(event.target.files);
+            if (selectedFiles.length === 0) return;
+            const file = selectedFiles[0];
+            pagesToRemoveList = [];
 
-            if (selectedFiles.length === 0) {
-                alert("দয়া করে ফাইল নির্বাচন করুন!");
-                return;
-            }
+            const previewArea = document.getElementById('previewArea');
+            previewArea.classList.remove('hidden');
+            previewArea.innerHTML = `<p class="text-xs text-blue-600 animate-pulse font-semibold">Generating page thumbnails...</p>`;
 
-            runGlobalLoader(async () => {
-                switch(currentTool) {
-                    case 'pdf-jpg':
-                        await executePDFToJPG(selectedFiles[0]);
-                        break;
-                    case 'jpg-pdf':
-                        await executeJPGToPDF();
-                        break;
-                    case 'pdf-word':
-                        await executePDFToWord(selectedFiles[0]);
-                        break;
-                    case 'word-pdf':
-                        await executeWordToPDF(selectedFiles[0]);
-                        break;
-                    case 'word-excel':
-                        await executeWordToExcel(selectedFiles[0]);
-                        break;
-                    case 'merge-pdf':
-                        await executePDFMerge();
-                        break;
-                    case 'resizer':
-                        await executeImageResizer(selectedFiles[0]);
-                        break;
-                    case 'resize-kb':
-                        const targetKB = parseInt(document.getElementById('kbSlider').value);
-                        for (let file of selectedFiles) {
-                            if (file.type === "application/pdf") {
-                                await executePDFCompressUltraClear(file, targetKB);
-                            } else if (file.type.startsWith("image/")) {
-                                await executeImageCompressUltraClear(file, targetKB);
-                            }
-                        }
-                        break;
-                    case 'remove-pages':
-                        await executePDFRemovePages(selectedFiles[0]);
-                        break;
-                    case 'add-page-num':
-                        await executePDFAddPageNumbers(selectedFiles[0]);
-                        break;
-                    case 'add-watermark':
-                        await executePDFAddWatermark(selectedFiles[0]);
-                        break;
-                    case 'lock-pdf':
-                        await executePDFLock(selectedFiles[0]);
-                        break;
-                    case 'bg-remove':
-                        await executeBackgroundRemover(selectedFiles[0]);
-                        break;
-                    case 'passport-photo':
-                        await executePassportPhotoMaker(selectedFiles[0]);
-                        break;
-                }
-            });
-        }
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let containerHtml = `<p class="font-semibold mb-2 text-slate-700">যে পেজগুলো বাদ দিতে চান সেগুলোতে ক্রস (X) এ ক্লিক করুন:</p><div class="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-60 overflow-y-auto p-2 w-full">`;
 
-        // TOOL 1: PDF Page Remover
-        async function executePDFRemovePages(file) {
-            const inputVal = document.getElementById('pagesToRemove').value.trim();
-            if (!inputVal) return alert("রিমুভ করার জন্য পেজ নম্বর লিখুন!");
-            
-            const removeNums = inputVal.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-            const { PDFDocument } = PDFLib;
-            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
-            
-            const pageCount = pdfDoc.getPageCount();
-            const keepIndices = [];
-            for (let i = 0; i < pageCount; i++) {
-                if (!removeNums.includes(i + 1)) {
-                    keepIndices.push(i);
-                }
-            }
-
-            const newPdf = await PDFDocument.create();
-            const copiedPages = await newPdf.copyPages(pdfDoc, keepIndices);
-            copiedPages.forEach(p => newPdf.addPage(p));
-
-            const pdfBytes = await newPdf.save();
-            downloadBlob(pdfBytes, `modified_${file.name}`, "application/pdf");
-        }
-
-        // TOOL 2: Add Page Numbers
-        async function executePDFAddPageNumbers(file) {
-            const { PDFDocument, rgb } = PDFLib;
-            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
-            const pages = pdfDoc.getPages();
-
-            pages.forEach((page, idx) => {
-                const { width } = page.getSize();
-                page.drawText(`Page ${idx + 1} of ${pages.length}`, {
-                    x: width / 2 - 35,
-                    y: 20,
-                    size: 10,
-                    color: rgb(0.2, 0.2, 0.2)
-                });
-            });
-
-            const pdfBytes = await pdfDoc.save();
-            downloadBlob(pdfBytes, `numbered_${file.name}`, "application/pdf");
-        }
-
-        // TOOL 3: Add Watermark
-        async function executePDFAddWatermark(file) {
-            const watermarkText = document.getElementById('watermarkText').value.trim() || "Tools Pulse";
-            const { PDFDocument, rgb, degrees } = PDFLib;
-            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
-            const pages = pdfDoc.getPages();
-
-            pages.forEach(page => {
-                const { width, height } = page.getSize();
-                page.drawText(watermarkText, {
-                    x: width / 4,
-                    y: height / 2,
-                    size: 90,
-                    color: rgb(0.5, 0.5, 0.5),
-                    opacity: 0.3, // Light blur transparent effect
-                    rotate: degrees(45)
-                });
-            });
-
-            const pdfBytes = await pdfDoc.save();
-            downloadBlob(pdfBytes, `watermarked_${file.name}`, "application/pdf");
-        }
-
-        // TOOL 4: Lock PDF (Password Protect)
-        async function executePDFLock(file) {
-            const password = document.getElementById('pdfPassword').value;
-            if (!password) return alert("পাসওয়ার্ড ইনপুট দিন!");
-            
-            const { PDFDocument } = PDFLib;
-            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
-            
-            // Encrypting PDF
-            pdfDoc.encrypt({
-                userPassword: password,
-                ownerPassword: password,
-                permissions: {
-                    printing: 'highResolution',
-                    modifying: false,
-                    copying: false
-                }
-            });
-
-            const pdfBytes = await pdfDoc.save();
-            downloadBlob(pdfBytes, `locked_${file.name}`, "application/pdf");
-        }
-
-        // TOOL 5: Background Remover (Client-Side Luminance Threshold Canvas)
-        async function executeBackgroundRemover(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-
-                        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        const data = imgData.data;
-
-                        // Transparency logic for bright backgrounds
-                        for (let i = 0; i < data.length; i += 4) {
-                            const r = data[i];
-                            const g = data[i+1];
-                            const b = data[i+2];
-                            if (r > 225 && g > 225 && b > 225) {
-                                data[i+3] = 0;
-                            }
-                        }
-                        ctx.putImageData(imgData, 0, 0);
-
-                        const link = document.createElement('a');
-                        link.href = canvas.toDataURL('image/png');
-                        link.download = `bg_removed_${file.name.split('.')[0]}.png`;
-                        link.click();
-                        resolve();
-                    }
-                }
-            });
-        }
-
-        // TOOL 6: Passport Size Photo Maker
-        async function executePassportPhotoMaker(file) {
-            const bgColor = document.getElementById('passportBgColor').value || '#0000FF';
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        // Standard Passport Photo Dimensions (413x531 px ~ 35x45 mm)
-                        canvas.width = 413;
-                        canvas.height = 531;
-                        const ctx = canvas.getContext('2d');
-
-                        // Fill chosen background color
-                        ctx.fillStyle = bgColor;
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                        // Center crop aspect ratio fit
-                        const aspect = img.width / img.height;
-                        let drawWidth = canvas.width;
-                        let drawHeight = canvas.width / aspect;
-
-                        if (drawHeight < canvas.height) {
-                            drawHeight = canvas.height;
-                            drawWidth = canvas.height * aspect;
-                        }
-
-                        const x = (canvas.width - drawWidth) / 2;
-                        const y = (canvas.height - drawHeight) / 2;
-
-                        ctx.drawImage(img, x, y, drawWidth, drawHeight);
-
-                        const link = document.createElement('a');
-                        link.href = canvas.toDataURL('image/jpeg', 0.95);
-                        link.download = `passport_photo_${file.name}`;
-                        link.click();
-                        resolve();
-                    }
-                }
-            });
-        }
-
-        // Custom / Preset Image Resizer Execution
-        async function executeImageResizer(file) {
-            return new Promise((resolve) => {
-                const customW = parseInt(document.getElementById('customWidth')?.value);
-                const customH = parseInt(document.getElementById('customHeight')?.value);
-
-                let targetW = 300;
-                let targetH = 300;
-
-                if (customW && customH && customW > 0 && customH > 0) {
-                    targetW = customW;
-                    targetH = customH;
-                }
-
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = targetW;
-                        canvas.height = targetH;
-                        const ctx = canvas.getContext('2d');
-                        ctx.imageSmoothingEnabled = true;
-                        ctx.imageSmoothingQuality = 'high';
-                        ctx.drawImage(img, 0, 0, targetW, targetH);
-
-                        const link = document.createElement('a');
-                        link.href = canvas.toDataURL('image/jpeg', 0.92);
-                        link.download = `resized_${targetW}x${targetH}_${file.name}`;
-                        link.click();
-                        resolve();
-                    }
-                }
-            });
-        }
-
-        // Existing Core Processing Functions
-        async function executePDFToJPG(file) {
-            const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
-            const page = await pdf.getPage(1);
-            const viewport = page.getViewport({ scale: 2.0 });
-            const canvas = document.createElement('canvas');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-            
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/jpeg', 0.92);
-            link.download = `${file.name.split('.')[0]}_page1.jpg`;
-            link.click();
-        }
-
-        async function executeJPGToPDF() {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            for (let i = 0; i < selectedFiles.length; i++) {
-                const dataUrl = await new Promise(r => {
-                    const reader = new FileReader();
-                    reader.onload = e => r(e.target.result);
-                    reader.readAsDataURL(selectedFiles[i]);
-                });
-                if (i > 0) doc.addPage();
-                doc.addImage(dataUrl, 'JPEG', 10, 10, 190, 0);
-            }
-            doc.save("Converted.pdf");
-        }
-
-        async function executePDFToWord(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let fullText = "";
-
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                const pageText = content.items.map(item => item.str).join(" ");
-                fullText += `--- Page ${i} ---\n` + pageText + "\n\n";
-            }
-
-            const blob = new Blob([fullText], { type: "application/msword;charset=utf-8" });
-            downloadBlob(await blob.arrayBuffer(), `${file.name.split('.')[0]}.docx`, "application/msword");
-        }
-
-        async function executeWordToPDF(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const splitText = doc.splitTextToSize(result.value, 180);
-            doc.text(splitText, 10, 10);
-            doc.save(`${file.name.split('.')[0]}.pdf`);
-        }
-
-        async function executeWordToExcel(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
-            const lines = result.value.split('\n').filter(line => line.trim() !== '');
-            const excelData = lines.map(line => [line]);
-
-            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-            XLSX.writeFile(workbook, `${file.name.split('.')[0]}.xlsx`);
-        }
-
-        async function executePDFMerge() {
-            const { PDFDocument } = PDFLib;
-            const mergedPdf = await PDFDocument.create();
-
-            for (let f of selectedFiles) {
-                const arrayBuffer = await f.arrayBuffer();
-                const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
-            }
-
-            const mergedPdfBytes = await mergedPdf.save();
-            downloadBlob(mergedPdfBytes, "Merged.pdf", "application/pdf");
-        }
-
-        async function executePDFCompressUltraClear(file, targetKB = 100) {
-            const arrayBuffer = await file.arrayBuffer();
-            if (file.size <= targetKB * 1024) {
-                downloadBlob(arrayBuffer, `compressed_${file.name}`, "application/pdf");
-                return;
-            }
-
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            const { jsPDF } = window.jspdf;
-            let doc = null;
-
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: 1.8 });
-                const canvas = document.createElement('canvas');
-                canvas.height = viewport.height; 
-                canvas.width = viewport.width;
-                await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                const imgData = canvas.toDataURL('image/jpeg', 0.75);
-
-                if (i === 1) doc = new jsPDF('p', 'pt', [viewport.width / 1.8, viewport.height / 1.8]);
-                else doc.addPage([viewport.width / 1.8, viewport.height / 1.8], 'p');
-
-                doc.addImage(imgData, 'JPEG', 0, 0, viewport.width / 1.8, viewport.height / 1.8);
-            }
-
-            downloadBlob(await doc.output('arraybuffer'), `compressed_${file.name}`, "application/pdf");
-        }
-
-        async function executeImageCompressUltraClear(file, targetKB = 100) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-
-                        const link = document.createElement('a');
-                        link.href = canvas.toDataURL('image/jpeg', 0.70);
-                        link.download = `compressed_${file.name}`;
-                        link.click();
-                        resolve();
-                    };
-                };
-            });
-        }
-
-        function executeURLShortener() {
-            const inputVal = document.getElementById('textInput').value.trim();
-            if (!inputVal) return alert("লিঙ্ক লিখুন!");
-            fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(inputVal)}`)
-                .then(res => res.text())
-                .then(shortUrl => {
-                    document.getElementById('previewArea').classList.remove('hidden');
-                    document.getElementById('previewArea').innerHTML = `<a href="${shortUrl}" target="_blank" class="text-cyan-700 font-bold underline">${shortUrl}</a>`;
-                });
-        }
-
-        function executeQRGenerator() {
-            const inputVal = document.getElementById('textInput').value.trim();
-            if (!inputVal) return alert("লেখা বা লিঙ্ক দিন!");
-            const container = document.getElementById('qrContainer');
-            container.innerHTML = '';
-            const qrBox = document.createElement('div');
-            container.appendChild(qrBox);
-            new QRCode(qrBox, { text: inputVal, width: 160, height: 160 });
-        }
-
-        function downloadBlob(data, filename, mimeType) {
-            const blob = new Blob([data], { type: mimeType });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
-
-        window.onload = function() {
-            updateVisitorCount();
-            switchTool('merge-pdf');
-        };
-    </script>
-</body>
-</html>
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 0.5 });
+                    const canvas = document.createElement('canvas');
+                    canvas.
