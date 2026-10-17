@@ -49,6 +49,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
+        /* Modern Blue & White Landing Page Theme Styling */
         .bg-theme-gradient { 
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); 
         }
@@ -57,6 +58,17 @@
         }
         .btn-gradient:hover { 
             background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); 
+        }
+        .hero-bg-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 64, 175, 0.3) 100%);
+            border-bottom-left-radius: 50% 100%;
+            z-index: 0;
+            pointer-events: none;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -71,7 +83,10 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans relative overflow-x-hidden">
+
+    <!-- Background Decorative Shape matching the uploaded design layout -->
+    <div class="hero-bg-shape"></div>
 
     <!-- Global Processing Overlay / Loader -->
     <div id="globalLoader" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] hidden flex-col items-center justify-center p-4">
@@ -93,51 +108,46 @@
     </div>
 
     <!-- Header Navigation -->
-    <header class="bg-theme-gradient text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+        <div class="container mx-auto px-4 py-3.5 flex justify-between items-center">
             
-            <!-- Brand & Navigation List -->
-            <nav class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pr-4 text-xs md:text-sm font-medium no-scrollbar" aria-label="Main Navigation">
-                <a href="https://toolspulse.net/" class="text-lg font-extrabold mr-3 flex items-center gap-1 text-white" title="Tools Pulse Home">
-                    <i class="fa-solid fa-bolt text-yellow-300"></i> Tools Pulse
-                </a>
-                <button type="button" onclick="switchTool('pdf-jpg')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to JPG</button>
-                <button type="button" onclick="switchTool('jpg-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">JPG to PDF</button>
-                <button type="button" onclick="switchTool('pdf-word')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">PDF to Word</button>
-                <button type="button" onclick="switchTool('word-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Word to PDF</button>
-                <button type="button" onclick="switchTool('word-excel')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Word to Excel</button>
-                <button type="button" onclick="switchTool('merge-pdf')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Merger PDF</button>
-                <button type="button" onclick="switchTool('resizer')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">Image Resizer</button>
-                <button type="button" onclick="switchTool('url-short')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">URL Shortener</button>
-                <button type="button" onclick="switchTool('qr-gen')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">QR Code</button>
-                <button type="button" onclick="switchTool('resize-kb')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">10 KB to 950 KB Converter</button>
+            <!-- Brand Logo -->
+            <a href="https://toolspulse.net/" class="text-xl font-extrabold flex items-center gap-2 text-blue-700" title="Tools Pulse Home">
+                <i class="fa-solid fa-bolt text-yellow-500"></i> ToolsPulse
+            </a>
 
-                <button type="button" onclick="switchTool('remove-pages')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">PDF Page Remover</button>
-                <button type="button" onclick="switchTool('add-page-num')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">Add Page Numbers</button>
-                <button type="button" onclick="switchTool('add-watermark')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">Add Watermark</button>
-                <button type="button" onclick="switchTool('lock-pdf')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">Lock PDF</button>
-                <button type="button" onclick="switchTool('bg-remove')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">Background Remover</button>
-                <button type="button" onclick="switchTool('passport-photo')" class="bg-blue-700/60 hover:bg-blue-700 px-3 py-1.5 rounded-full transition">Passport Photo Maker</button>
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+                <a href="#home" onclick="switchTool('merge-pdf')" class="hover:text-blue-600 transition">Home</a>
+                <a href="#tools-section" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="hover:text-blue-600 transition flex items-center gap-1">Tools <i class="fa-solid fa-angle-down text-xs"></i></a>
+                <a href="#" class="hover:text-blue-600 transition">Features</a>
+                <a href="#" class="hover:text-blue-600 transition">Pricing</a>
+                <a href="#" class="hover:text-blue-600 transition">Blog</a>
             </nav>
 
+            <!-- Right Action & Mobile Menu -->
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-1.5 bg-black/20 text-white px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                <div class="hidden sm:flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
                     <span class="relative flex h-2 w-2">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    Live Visitors: <span id="visitorCount" class="text-yellow-300 font-bold">10,248</span>
+                    Live Visitors: <span id="visitorCount" class="font-bold">10,248</span>
                 </div>
 
-                <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-white text-2xl px-2 focus:outline-none">
+                <a href="#workBox" onclick="switchTool('merge-pdf')" class="btn-gradient text-white text-xs md:text-sm font-bold px-4 py-2 rounded-full shadow-md transition">
+                    Download / Get Started
+                </a>
+
+                <button id="menuBtn" aria-label="Toggle Menu" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="text-slate-700 text-2xl px-2 focus:outline-none md:hidden">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Dropdown Menu -->
-    <div id="dropdownMenu" class="hidden bg-white border-b shadow-lg px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+    <!-- Dropdown / All Tools Menu -->
+    <div id="dropdownMenu" class="hidden bg-white border-b shadow-lg px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm z-40 relative">
         <button type="button" onclick="switchTool('pdf-jpg')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-pdf"></i> PDF to JPG</button>
         <button type="button" onclick="switchTool('jpg-pdf')" class="text-left text-indigo-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-image"></i> JPG to PDF</button>
         <button type="button" onclick="switchTool('pdf-word')" class="text-left text-blue-700 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-file-word"></i> PDF to Word</button>
@@ -157,73 +167,79 @@
         <button type="button" onclick="switchTool('passport-photo')" class="text-left text-indigo-800 font-semibold hover:underline flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> Passport Photo Maker</button>
     </div>
 
-    <!-- Main Workspace -->
-    <div class="container mx-auto p-4 flex-grow grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Main Workspace Section (Matching the Reference Screenshot Layout) -->
+    <section id="home" class="container mx-auto px-4 py-8 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
         
-        <!-- Sidebar Ads -->
-        <aside class="md:col-span-1 space-y-4" aria-label="Sidebar Advertisements">
-            <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-48 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 1 (Sidebar Top)
+        <!-- Left Hero Details -->
+        <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                SIMPLEST WAY <br>TO BUILD TOOLS
+            </h1>
+            <p class="text-slate-600 text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+                ToolsPulse provides professional free online utility tools including PDF converters, image resizers, password protection, passport photo makers, and instant file compressors securely in your browser.
+            </p>
+            <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                <a href="#workBox" class="btn-gradient text-white font-bold py-3.5 px-8 rounded-xl shadow-lg transition text-base flex items-center gap-2">
+                    Get Started Now <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <button type="button" onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold py-3.5 px-6 rounded-xl shadow-sm transition text-base">
+                    Explore Tools
+                </button>
             </div>
-            <div class="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-64 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 2 (Sidebar Bottom)
-            </div>
-        </aside>
+        </div>
 
-        <!-- Dynamic Work Area -->
-        <main class="md:col-span-3 bg-white border border-slate-200 shadow-sm rounded-2xl p-6 flex flex-col items-center justify-between min-h-[460px]">
-            
-            <h2 id="toolTitle" class="text-xl md:text-2xl font-bold text-blue-900 border-b-2 border-blue-400 pb-2 mb-4 w-full text-center">
-                PDF Merger Tool
-            </h2>
-
-            <div id="workBox" class="w-full flex-grow flex flex-col items-center justify-center p-6 my-2 border-2 border-dashed border-blue-300 bg-blue-50/40 rounded-xl text-center">
-                <div class="w-20 h-20 bg-theme-gradient text-white rounded-full flex items-center justify-center text-3xl shadow-md mb-3">
-                    <i id="workBoxIcon" class="fa-solid fa-code-merge"></i>
-                </div>
+        <!-- Right Interactive Dynamic Tool Work Area -->
+        <div class="lg:col-span-6">
+            <div class="bg-white border border-slate-200 shadow-xl rounded-3xl p-6 md:p-8 flex flex-col items-center justify-between min-h-[460px] relative">
                 
-                <p id="workBoxText" class="text-slate-600 font-medium mb-4">একাধিক PDF ফাইল নির্বাচন করুন</p>
-                
-                <!-- Dynamic Input Container -->
-                <div id="inputContainer" class="w-full max-w-md">
-                    <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
-                    <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
-                        Choose File
-                    </button>
+                <h2 id="toolTitle" class="text-xl md:text-2xl font-bold text-blue-900 border-b-2 border-blue-500 pb-2 mb-4 w-full text-center">
+                    PDF Merger Tool
+                </h2>
+
+                <div id="workBox" class="w-full flex-grow flex flex-col items-center justify-center p-6 my-2 border-2 border-dashed border-blue-300 bg-blue-50/40 rounded-2xl text-center">
+                    <div class="w-16 h-16 bg-theme-gradient text-white rounded-full flex items-center justify-center text-2xl shadow-md mb-3">
+                        <i id="workBoxIcon" class="fa-solid fa-code-merge"></i>
+                    </div>
+                    
+                    <p id="workBoxText" class="text-slate-600 font-medium mb-4">একাধিক PDF ফাইল নির্বাচন করুন</p>
+                    
+                    <!-- Dynamic Input Container -->
+                    <div id="inputContainer" class="w-full max-w-md">
+                        <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
+                        <button id="selectBtn" type="button" onclick="document.getElementById('fileInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-md">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <div id="statusMessage" class="mt-3 text-xs font-semibold text-blue-600 hidden"></div>
+                    <div id="previewArea" class="mt-4 hidden w-full flex flex-col items-center justify-center text-sm text-slate-700"></div>
+                    <div id="qrContainer" class="mt-4 flex flex-col items-center gap-3"></div>
                 </div>
 
-                <div id="statusMessage" class="mt-3 text-xs font-semibold text-blue-600 hidden"></div>
-                <div id="previewArea" class="mt-4 hidden w-full flex flex-col items-center justify-center text-sm text-slate-700"></div>
-                <div id="qrContainer" class="mt-4 flex flex-col items-center gap-3"></div>
+                <!-- Action Button -->
+                <button id="mainActionBtn" type="button" onclick="processCurrentTool()" class="w-full btn-gradient text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base md:text-lg flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-download"></i> Merge & Download PDF
+                </button>
+
             </div>
+        </div>
 
-            <!-- Action Button -->
-            <button id="mainActionBtn" type="button" onclick="processCurrentTool()" class="w-full md:w-2/3 btn-gradient text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base md:text-lg flex items-center justify-center gap-2 mt-2">
-                <i class="fa-solid fa-download"></i> Merge & Download PDF
-            </button>
+    </section>
 
-            <!-- Bottom Ad Banner -->
-            <div class="w-full mt-6 bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl h-20 flex items-center justify-center text-slate-400 font-bold text-sm">
-                Ad Space 3 (Bottom Horizontal Banner)
-            </div>
-
-        </main>
-    </div>
-
-    <!-- SEO Content Section -->
-    <section class="bg-white border-t border-slate-200 mt-8 py-8">
-        <div class="container mx-auto px-4 max-w-5xl">
-            <h1 class="text-2xl font-bold text-slate-800 mb-4 text-center">Tools Pulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h1>
-            <p class="text-slate-600 text-sm leading-relaxed mb-6 text-center">
-                Tools Pulse হল একটি ফ্রি অনলাইন টুল প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর, কমপ্রেস, পাসওয়ার্ড প্রটেক্ট, ওয়াটারমার্ক এবং পাসপোর্ট ফটো তৈরি করতে পারবেন।
+    <!-- SEO & Info Section -->
+    <section class="bg-white border-t border-slate-200 mt-12 py-10 relative z-10">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">ToolsPulse - ফ্রি অনলাইন ফাইল কনভার্টার ও ইউটিলিটি টুলস</h2>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                ToolsPulse হল একটি সম্পূর্ণ ফ্রি অনলাইন প্ল্যাটফর্ম যেখানে আপনি কোনো ঝামেলা ছাড়াই PDF, Image, Word এবং Excel ফাইল রূপান্তর, কমপ্রেস, পাসওয়ার্ড প্রটেক্ট, ওয়াটারমার্ক এবং পাসপোর্ট ফটো তৈরি করতে পারবেন। সম্পূর্ণ সুরক্ষিত এবং দ্রুত ক্লায়েন্ট-সাইড প্রসেসিং।
             </p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800 relative z-10">
         <div class="container mx-auto px-4">
-            <p>&copy; 2026 Tools Pulse. All rights reserved.</p>
+            <p>&copy; 2026 ToolsPulse. All rights reserved.</p>
         </div>
     </footer>
 
@@ -239,6 +255,7 @@
         let selectedFiles = [];
         let pagesToRemoveList = [];
 
+        // Live Visitor Counter
         let count = parseInt(localStorage.getItem('visitor_count')) || 10248;
         function updateVisitorCount() {
             document.getElementById('visitorCount').innerText = count.toLocaleString('en-US');
@@ -249,6 +266,7 @@
             updateVisitorCount();
         }, 4000);
 
+        // Global Progress Bar Controller
         async function runGlobalLoader(workCallback) {
             const loader = document.getElementById('globalLoader');
             const fill = document.getElementById('progressBarFill');
@@ -524,6 +542,7 @@
             }
         }
 
+        // PDF Page Remover Preview with Cross (X) Button over each page
         async function handlePDFPreviewForRemoval(event) {
             selectedFiles = Array.from(event.target.files);
             if (selectedFiles.length === 0) return;
@@ -653,6 +672,7 @@
             });
         }
 
+        // FIXED TOOL 1: PDF Page Remover using marked Cross pages
         async function executePDFRemovePagesFixed(file) {
             const { PDFDocument } = PDFLib;
             const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
@@ -678,6 +698,7 @@
             downloadBlob(pdfBytes, `modified_${file.name}`, "application/pdf");
         }
 
+        // FIXED TOOL 2: Lock PDF (Proper standard encryption using pdf-lib options)
         async function executePDFLockFixed(file) {
             const password = document.getElementById('pdfPassword').value;
             if (!password) return alert("পাসওয়ার্ড ইনপুট দিন!");
@@ -702,6 +723,7 @@
             downloadBlob(pdfBytes, `locked_${file.name}`, "application/pdf");
         }
 
+        // FIXED TOOL 3: Advanced Smart Background Remover (Auto edge contrast mask)
         async function executeBackgroundRemoverFixed(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -720,10 +742,10 @@
                         const data = imgData.data;
 
                         const corners = [
-                            0,
-                            (canvas.width - 1) * 4,
-                            (canvas.width * (canvas.height - 1)) * 4,
-                            (canvas.width * canvas.height - 1) * 4
+                            0, 
+                            (canvas.width - 1) * 4, 
+                            (canvas.width * (canvas.height - 1)) * 4, 
+                            (canvas.width * canvas.height - 1) * 4 
                         ];
 
                         let bgR = 0, bgG = 0, bgB = 0;
@@ -744,7 +766,7 @@
 
                             const diff = Math.abs(r - bgR) + Math.abs(g - bgG) + Math.abs(b - bgB);
                             if (diff < tolerance) {
-                                data[i+3] = 0;
+                                data[i+3] = 0; 
                             }
                         }
 
@@ -760,6 +782,7 @@
             });
         }
 
+        // FIXED TOOL 4: Passport Size Photo Maker (Proper aspect ratio & background replacement)
         async function executePassportPhotoMakerFixed(file) {
             const bgColor = document.getElementById('passportBgColor').value || '#ffffff';
             return new Promise((resolve) => {
@@ -821,7 +844,7 @@
         }
 
         async function executePDFAddWatermark(file) {
-            const watermarkText = document.getElementById('watermarkText').value.trim() || "Tools Pulse";
+            const watermarkText = document.getElementById('watermarkText').value.trim() || "ToolsPulse";
             const { PDFDocument, rgb, degrees } = PDFLib;
             const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
             const pages = pdfDoc.getPages();
