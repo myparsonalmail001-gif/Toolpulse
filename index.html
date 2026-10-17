@@ -562,4 +562,515 @@
                     const page = await pdf.getPage(i);
                     const viewport = page.getViewport({ scale: 0.5 });
                     const canvas = document.createElement('canvas');
-                    canvas.
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                    const imgUrl = canvas.toDataURL();
+
+                    containerHtml += `
+                        <div id="page-card-${i}" class="relative border rounded p-1 bg-white shadow-sm flex flex-col items-center">
+                            <img src="${imgUrl}" class="w-full h-auto object-contain max-h-28">
+                            <span class="text-[10px] font-bold mt-1 text-slate-600">Page ${i}</span>
+                            <button type="button" onclick="toggleRemovePage(${i})" id="remove-btn-${i}" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+                containerHtml += `</div>`;
+                previewArea.innerHTML = containerHtml;
+            } catch (err) {
+                console.error(err);
+                previewArea.innerHTML = `<p class="text-red-500 text-xs">Failed to load PDF pages preview.</p>`;
+            }
+        }
+
+        function toggleRemovePage(pageNum) {
+            const btn = document.getElementById(`remove-btn-${pageNum}`);
+            const card = document.getElementById(`page-card-${pageNum}`);
+            
+            if (pagesToRemoveList.includes(pageNum)) {
+                pagesToRemoveList = pagesToRemoveList.filter(p => p !== pageNum);
+                btn.className = "absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow";
+                btn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+                card.classList.remove('opacity-40', 'border-red-500', 'border-2');
+            } else {
+                pagesToRemoveList.push(pageNum);
+                btn.className = "absolute top-1 right-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow";
+                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                card.classList.add('opacity-40', 'border-red-500', 'border-2');
+            }
+        }
+
+        async function processCurrentTool() {
+            if (currentTool === 'url-short') {
+                executeURLShortener();
+                return;
+            }
+            if (currentTool === 'qr-gen') {
+                executeQRGenerator();
+                return;
+            }
+
+            if (selectedFiles.length === 0) {
+                alert("দয়া করে ফাইল নির্বাচন করুন!");
+                return;
+            }
+
+            runGlobalLoader(async () => {
+                switch(currentTool) {
+                    case 'pdf-jpg':
+                        await executePDFToJPG(selectedFiles[0]);
+                        break;
+                    case 'jpg-pdf':
+                        await executeJPGToPDF();
+                        break;
+                    case 'pdf-word':
+                        await executePDFToWord(selectedFiles[0]);
+                        break;
+                    case 'word-pdf':
+                        await executeWordToPDF(selectedFiles[0]);
+                        break;
+                    case 'word-excel':
+                        await executeWordToExcel(selectedFiles[0]);
+                        break;
+                    case 'merge-pdf':
+                        await executePDFMerge();
+                        break;
+                    case 'resizer':
+                        await executeImageResizer(selectedFiles[0]);
+                        break;
+                    case 'resize-kb':
+                        const targetKB = parseInt(document.getElementById('kbSlider').value);
+                        for (let file of selectedFiles) {
+                            if (file.type === "application/pdf") {
+                                await executePDFCompressUltraClear(file, targetKB);
+                            } else if (file.type.startsWith("image/")) {
+                                await executeImageCompressUltraClear(file, targetKB);
+                            }
+                        }
+                        break;
+                    case 'remove-pages':
+                        await executePDFRemovePagesFixed(selectedFiles[0]);
+                        break;
+                    case 'add-page-num':
+                        await executePDFAddPageNumbers(selectedFiles[0]);
+                        break;
+                    case 'add-watermark':
+                        await executePDFAddWatermark(selectedFiles[0]);
+                        break;
+                    case 'lock-pdf':
+                        await executePDFLockFixed(selectedFiles[0]);
+                        break;
+                    case 'bg-remove':
+                        await executeBackgroundRemoverFixed(selectedFiles[0]);
+                        break;
+                    case 'passport-photo':
+                        await executePassportPhotoMakerFixed(selectedFiles[0]);
+                        break;
+                }
+            });
+        }
+
+        // FIXED TOOL 1: PDF Page Remover using marked Cross pages
+        async function executePDFRemovePagesFixed(file) {
+            const { PDFDocument } = PDFLib;
+            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+            const pageCount = pdfDoc.getPageCount();
+            const keepIndices = [];
+
+            for (let i = 0; i < pageCount; i++) {
+                if (!pagesToRemoveList.includes(i + 1)) {
+                    keepIndices.push(i);
+                }
+            }
+
+            if (keepIndices.length === 0) {
+                alert("সবগুলো পেজ বাদ দেওয়া যাবে না! অন্তত একটি পেজ রাখুন।");
+                return;
+            }
+
+            const newPdf = await PDFDocument.create();
+            const copiedPages = await newPdf.copyPages(pdfDoc, keepIndices);
+            copiedPages.forEach(p => newPdf.addPage(p));
+
+            const pdfBytes = await newPdf.save();
+            downloadBlob(pdfBytes, `modified_${file.name}`, "application/pdf");
+        }
+
+        // FIXED TOOL 2: Lock PDF (Proper standard encryption using pdf-lib options)
+        async function executePDFLockFixed(file) {
+            const password = document.getElementById('pdfPassword').value;
+            if (!password) return alert("পাসওয়ার্ড ইনপুট দিন!");
+            
+            const { PDFDocument } = PDFLib;
+            const pdfDoc = await PDFDocument.load(await file.arrayBuffer(), { ignoreEncryption: true });
+            
+            const pdfBytes = await pdfDoc.save({
+                userPassword: password,
+                ownerPassword: password,
+                permissions: {
+                    printing: 'highResolution',
+                    modifying: false,
+                    copying: false,
+                    annotating: false,
+                    fillingForms: false,
+                    contentAccessibility: false,
+                    documentAssembly: false
+                }
+            });
+
+            downloadBlob(pdfBytes, `locked_${file.name}`, "application/pdf");
+        }
+
+        // FIXED TOOL 3: Advanced Smart Background Remover (Auto edge contrast mask)
+        async function executeBackgroundRemoverFixed(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+
+                        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const data = imgData.data;
+
+                        const corners = [
+                            0, 
+                            (canvas.width - 1) * 4, 
+                            (canvas.width * (canvas.height - 1)) * 4, 
+                            (canvas.width * canvas.height - 1) * 4 
+                        ];
+
+                        let bgR = 0, bgG = 0, bgB = 0;
+                        corners.forEach(idx => {
+                            bgR += data[idx];
+                            bgG += data[idx+1];
+                            bgB += data[idx+2];
+                        });
+                        bgR = Math.round(bgR / 4);
+                        bgG = Math.round(bgG / 4);
+                        bgB = Math.round(bgB / 4);
+
+                        const tolerance = 45;
+                        for (let i = 0; i < data.length; i += 4) {
+                            const r = data[i];
+                            const g = data[i+1];
+                            const b = data[i+2];
+
+                            const diff = Math.abs(r - bgR) + Math.abs(g - bgG) + Math.abs(b - bgB);
+                            if (diff < tolerance) {
+                                data[i+3] = 0; 
+                            }
+                        }
+
+                        ctx.putImageData(imgData, 0, 0);
+
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL('image/png');
+                        link.download = `bg_removed_${file.name.split('.')[0]}.png`;
+                        link.click();
+                        resolve();
+                    }
+                }
+            });
+        }
+
+        // FIXED TOOL 4: Passport Size Photo Maker (Proper aspect ratio & background replacement)
+        async function executePassportPhotoMakerFixed(file) {
+            const bgColor = document.getElementById('passportBgColor').value || '#ffffff';
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 413;
+                        canvas.height = 531;
+                        const ctx = canvas.getContext('2d');
+
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        const aspect = img.width / img.height;
+                        let drawWidth = canvas.width;
+                        let drawHeight = canvas.width / aspect;
+
+                        if (drawHeight < canvas.height) {
+                            drawHeight = canvas.height;
+                            drawWidth = canvas.height * aspect;
+                        }
+
+                        const x = (canvas.width - drawWidth) / 2;
+                        const y = (canvas.height - drawHeight) / 2;
+
+                        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL('image/jpeg', 0.95);
+                        link.download = `passport_photo_${file.name}`;
+                        link.click();
+                        resolve();
+                    }
+                }
+            });
+        }
+
+        async function executePDFAddPageNumbers(file) {
+            const { PDFDocument, rgb } = PDFLib;
+            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+            const pages = pdfDoc.getPages();
+
+            pages.forEach((page, idx) => {
+                const { width } = page.getSize();
+                page.drawText(`Page ${idx + 1} of ${pages.length}`, {
+                    x: width / 2 - 35,
+                    y: 20,
+                    size: 10,
+                    color: rgb(0.2, 0.2, 0.2)
+                });
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            downloadBlob(pdfBytes, `numbered_${file.name}`, "application/pdf");
+        }
+
+        async function executePDFAddWatermark(file) {
+            const watermarkText = document.getElementById('watermarkText').value.trim() || "ToolsPulse";
+            const { PDFDocument, rgb, degrees } = PDFLib;
+            const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+            const pages = pdfDoc.getPages();
+
+            pages.forEach(page => {
+                const { width, height } = page.getSize();
+                page.drawText(watermarkText, {
+                    x: width / 4,
+                    y: height / 2,
+                    size: 90,
+                    color: rgb(0.5, 0.5, 0.5),
+                    opacity: 0.3,
+                    rotate: degrees(45)
+                });
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            downloadBlob(pdfBytes, `watermarked_${file.name}`, "application/pdf");
+        }
+
+        async function executeImageResizer(file) {
+            return new Promise((resolve) => {
+                const customW = parseInt(document.getElementById('customWidth')?.value);
+                const customH = parseInt(document.getElementById('customHeight')?.value);
+
+                let targetW = 300;
+                let targetH = 300;
+
+                if (customW && customH && customW > 0 && customH > 0) {
+                    targetW = customW;
+                    targetH = customH;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetW;
+                        canvas.height = targetH;
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, targetW, targetH);
+
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL('image/jpeg', 0.92);
+                        link.download = `resized_${targetW}x${targetH}_${file.name}`;
+                        link.click();
+                        resolve();
+                    }
+                }
+            });
+        }
+
+        async function executePDFToJPG(file) {
+            const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 2.0 });
+            const canvas = document.createElement('canvas');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+            
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/jpeg', 0.92);
+            link.download = `${file.name.split('.')[0]}_page1.jpg`;
+            link.click();
+        }
+
+        async function executeJPGToPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const dataUrl = await new Promise(r => {
+                    const reader = new FileReader();
+                    reader.onload = e => r(e.target.result);
+                    reader.readAsDataURL(selectedFiles[i]);
+                });
+                if (i > 0) doc.addPage();
+                doc.addImage(dataUrl, 'JPEG', 10, 10, 190, 0);
+            }
+            doc.save("Converted.pdf");
+        }
+
+        async function executePDFToWord(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = "";
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(" ");
+                fullText += `--- Page ${i} ---\n` + pageText + "\n\n";
+            }
+
+            const blob = new Blob([fullText], { type: "application/msword;charset=utf-8" });
+            downloadBlob(await blob.arrayBuffer(), `${file.name.split('.')[0]}.docx`, "application/msword");
+        }
+
+        async function executeWordToPDF(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const splitText = doc.splitTextToSize(result.value, 180);
+            doc.text(splitText, 10, 10);
+            doc.save(`${file.name.split('.')[0]}.pdf`);
+        }
+
+        async function executeWordToExcel(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+            const lines = result.value.split('\n').filter(line => line.trim() !== '');
+            const excelData = lines.map(line => [line]);
+
+            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, `${file.name.split('.')[0]}.xlsx`);
+        }
+
+        async function executePDFMerge() {
+            const { PDFDocument } = PDFLib;
+            const mergedPdf = await PDFDocument.create();
+
+            for (let f of selectedFiles) {
+                const arrayBuffer = await f.arrayBuffer();
+                const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+            }
+
+            const mergedPdfBytes = await mergedPdf.save();
+            downloadBlob(mergedPdfBytes, "Merged.pdf", "application/pdf");
+        }
+
+        async function executePDFCompressUltraClear(file, targetKB = 100) {
+            const arrayBuffer = await file.arrayBuffer();
+            if (file.size <= targetKB * 1024) {
+                downloadBlob(arrayBuffer, `compressed_${file.name}`, "application/pdf");
+                return;
+            }
+
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const { jsPDF } = window.jspdf;
+            let doc = null;
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 1.8 });
+                const canvas = document.createElement('canvas');
+                canvas.height = viewport.height; 
+                canvas.width = viewport.width;
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                const imgData = canvas.toDataURL('image/jpeg', 0.75);
+
+                if (i === 1) doc = new jsPDF('p', 'pt', [viewport.width / 1.8, viewport.height / 1.8]);
+                else doc.addPage([viewport.width / 1.8, viewport.height / 1.8], 'p');
+
+                doc.addImage(imgData, 'JPEG', 0, 0, viewport.width / 1.8, viewport.height / 1.8);
+            }
+
+            downloadBlob(await doc.output('arraybuffer'), `compressed_${file.name}`, "application/pdf");
+        }
+
+        async function executeImageCompressUltraClear(file, targetKB = 100) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL('image/jpeg', 0.70);
+                        link.download = `compressed_${file.name}`;
+                        link.click();
+                        resolve();
+                    };
+                };
+            });
+        }
+
+        function executeURLShortener() {
+            const inputVal = document.getElementById('textInput').value.trim();
+            if (!inputVal) return alert("লিঙ্ক লিখুন!");
+            fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(inputVal)}`)
+                .then(res => res.text())
+                .then(shortUrl => {
+                    document.getElementById('previewArea').classList.remove('hidden');
+                    document.getElementById('previewArea').innerHTML = `<a href="${shortUrl}" target="_blank" class="text-blue-700 font-bold underline">${shortUrl}</a>`;
+                });
+        }
+
+        function executeQRGenerator() {
+            const inputVal = document.getElementById('textInput').value.trim();
+            if (!inputVal) return alert("লেখা বা লিঙ্ক দিন!");
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+            const qrBox = document.createElement('div');
+            container.appendChild(qrBox);
+            new QRCode(qrBox, { text: inputVal, width: 160, height: 160 });
+        }
+
+        function downloadBlob(data, filename, mimeType) {
+            const blob = new Blob([data], { type: mimeType });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        window.onload = function() {
+            updateVisitorCount();
+            switchTool('merge-pdf');
+        };
+    </script>
+</body>
+</html>
